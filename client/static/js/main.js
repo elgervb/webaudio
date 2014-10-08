@@ -7,6 +7,9 @@
  * implement event model on custom object: http://stackoverflow.com/questions/15308371/custom-events-model-without-using-dom-events-in-javascript
  */
  var songs = [
+   {
+    url: 'static/music/explosion.ogg'
+  },
   {
     url: 'static/music/01 Mumford And Sons - Sigh No More.mp3'
   },
@@ -44,16 +47,7 @@
     url: 'static/music/12 Mumford And Sons - After the Storm.mp3'
   },
   {
-    url: 'static/music/explosion.ogg',
-    name: 'Explosion',
-    type: 'ogg',
-    artist : null
-  },
-  {
-    url: 'static/music/QOTSA-Little_Sister.ogg',
-    name: 'Little Sister',
-    type: 'ogg',
-    artist: 'Queest of the Stone Age'
+    url: 'static/music/QOTSA-Little_Sister.ogg'
   }
  ];
 var callbacks = {
@@ -62,7 +56,7 @@ var callbacks = {
       progress.max = duration.toFixed(1);
       progress.value=starttime.toFixed(1);
       progressTimer = setInterval(function(){
-        progress.value = parseFloat(progress.value) + .1;
+      progress.value = parseFloat(progress.value) + .1;
       }, 100);
     },
     stop : function(e){
@@ -79,14 +73,15 @@ var callbacks = {
     },
     next : function(e){
       clearInterval(progressTimer);
+      document.getElementById('play').classList.remove('pause');
       console.log('Next song');
-      e.detail.player.play();
     },
     pause : function(e){
       clearInterval(progressTimer);
       console.log('Pausing at ',e.detail.elapsed,'of',e.detail.duration );
     },
     end : function(e){
+      console.log('Ended');
       var el = document.getElementById('progress');
       el.value = el.max;
       console.log('finish playing');
@@ -155,7 +150,7 @@ var Player = function(songs){
     this.removeEventListener = target.removeEventListener.bind(target);
     this.dispatchEvent = target.dispatchEvent.bind(target);
   },
-  target = new EventTarget();
+  target = new EventTarget(),
   /**
    * Create a custom audio player event
    * @param string type the event type eg, stop, play, etc
@@ -163,16 +158,18 @@ var Player = function(songs){
    */
   createEvent = function(type, data){
     return new CustomEvent(type, {detail: data||{}})
-  }
+  },
   clear = function(){
+    if (source){
+      source.stop(0);
+    }
     source = null;
-    elapsedTime = startTime = 0;
   },
   next = function(){
-    stop();
     clear();
     if (playlist.next()){
-      target.dispatchEvent(createEvent('next', {player: this}) );
+      target.dispatchEvent(createEvent('next') );
+      play();
     }
   },
   pause = function(){
@@ -192,25 +189,9 @@ var Player = function(songs){
       .then(function(buffer, url){
         context.decodeAudioData(buffer, function(buffer) {
           audioBuffer = buffer;
-          source = context.createBufferSource();
-          source.buffer = audioBuffer;
-          source.connect(gainNode);
-          source.loop = false;
-          source.onended = function(e){
-            // this is also called when pausing
-            if (audioBuffer.duration <= elapsedTime){
-              if (source){source.stop(0);}
-              target.dispatchEvent( createEvent('end', {player: this}) );
-            }
-          }
-          startTime = context.currentTime;
-          source.start(0);
+          startPlaying(0);
           
-          target.dispatchEvent(createEvent('play', {
-              'elapsed': 0, 
-              'duration': audioBuffer.duration
-            })
-          );
+          
 
           console.log('Start playing');
         }, function(){
@@ -219,32 +200,34 @@ var Player = function(songs){
       });
     }
     else{
-      source = context.createBufferSource();
-      source.buffer = audioBuffer;
-      source.connect(gainNode);
-      source.loop = false;
-      source.onended = function(e){
-        // this is also called when pausing
-        if (audioBuffer.duration <= elapsedTime){
-          if (source){source.stop(0);}
-          target.dispatchEvent( createEvent('end', {player: this}) );
-        }
-      }
-      startTime = context.currentTime;
-      source.start(0, elapsedTime % audioBuffer.duration);
-      
-      target.dispatchEvent(createEvent('play', {
-            elapsed: elapsedTime % audioBuffer.duration, 
-            duration: audioBuffer.duration
-          })
-      );
+      startPlaying(0, elapsedTime % audioBuffer.duration);
       
       console.log('Resuming at ',elapsedTime,'of',audioBuffer.duration);
     }
   },
+  startPlaying = function(elapsed){
+    source = context.createBufferSource();
+    source.buffer = audioBuffer;
+    source.connect(gainNode);
+    source.loop = false;
+    source.onended = function(e){
+      // this is also called when pausing
+      if (audioBuffer.duration <= elapsedTime){
+        if (source){source.stop(0);}
+        target.dispatchEvent( createEvent('end') );
+      }
+      elapsedTime = startTime = 0;
+    }
+    startTime = context.currentTime;
+    source.start(0, elapsed);
+    
+    target.dispatchEvent(createEvent('play', {
+        'elapsed': 0, 
+        'duration': audioBuffer.duration
+      })
+    );
+  },
   previous = function(){
-    console.log('Previous song');
-    stop();
     clear();
     if (playlist.previous()){
       target.dispatchEvent(createEvent('previous', {player: this}));
@@ -321,7 +304,7 @@ var Playlist = function(items){
       return items[--index]
     }
     return null;
-  }
+  },
   reset = function(){
     index = 0;
   },
