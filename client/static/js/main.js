@@ -163,6 +163,7 @@ var Player = function(songs){
       source.stop(0);
     }
     source = null;
+    elapsedTime = startTime = 0;
   },
   next = function(){
     clear();
@@ -188,36 +189,38 @@ var Player = function(songs){
       .then(function(buffer, url){
         context.decodeAudioData(buffer, function(buffer) {
           audioBuffer = buffer;
-          startPlaying(0);
+          startPlaying();
         }, function(){
          console.log('Error encoding file ' + url);
         });
       });
     }
     else{
-      startPlaying(0, elapsedTime % audioBuffer.duration);
+      startPlaying();
     }
   },
-  startPlaying = function(elapsed){
+  startPlaying = function(){
+    startTime = context.currentTime;
     source = context.createBufferSource();
     source.buffer = audioBuffer;
     source.connect(gainNode);
     source.loop = false;
     source.onended = function(e){
-      elapsedTime += context.currentTime - startTime;
+      var elapsed = context.currentTime - startTime;
       // this is also called when pausing
-      if (audioBuffer.duration <= elapsedTime){
+      if (audioBuffer.duration <= elapsed){
         if (source){source.stop(0);}
         target.dispatchEvent( createEvent('end') );
         next();
+
+        elapsedTime = startTime = 0;
       }
-      elapsedTime = startTime = 0;
     }
-    startTime = context.currentTime;
-    source.start(0, elapsed);
+    
+    source.start(0, elapsedTime);
     
     target.dispatchEvent(createEvent('play', {
-        'elapsed': elapsed, 
+        'elapsed': elapsedTime, 
         'duration': audioBuffer.duration
       })
     );
@@ -229,11 +232,7 @@ var Player = function(songs){
     }
   },
   stop = function(){
-    if (source){
-      source.stop(0);
-    }
-    elapsedTime = startTime = 0;
-    console.log('Stopped');
+    clear();
     target.dispatchEvent(createEvent('stop'));
   },
   gain = function(gain){
