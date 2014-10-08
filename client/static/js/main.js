@@ -11,6 +11,9 @@
     url: 'static/music/explosion.ogg'
   },
   {
+    url: 'static/music/QOTSA-Little_Sister.ogg'
+  },
+  {
     url: 'static/music/01 Mumford And Sons - Sigh No More.mp3'
   },
   {
@@ -45,9 +48,6 @@
   },
   {
     url: 'static/music/12 Mumford And Sons - After the Storm.mp3'
-  },
-  {
-    url: 'static/music/QOTSA-Little_Sister.ogg'
   }
  ];
 var callbacks = {
@@ -65,6 +65,8 @@ var callbacks = {
       document.getElementById('progress').value = 0;
     },
     play : function(e){
+      document.getElementById('play').classList.add('pause');
+      console.log('Play from',e.detail.elapsed,'of',e.detail.duration);
       clearInterval(progressTimer);
       callbacks.progress(e.detail.elapsed, e.detail.duration);
     },
@@ -81,13 +83,10 @@ var callbacks = {
       console.log('Pausing at ',e.detail.elapsed,'of',e.detail.duration );
     },
     end : function(e){
-      console.log('Ended');
+      console.log('Finished song');
       var el = document.getElementById('progress');
       el.value = el.max;
-      console.log('finish playing');
       callbacks.stop();
-      e.detail.player.next();
-      e.detail.player.play();
     }
  }
  ,progressTimer;
@@ -107,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function () {
    * EVENT LISTENERS 
    */
   document.getElementById('play').addEventListener('mousedown', function(){
-    this.classList.toggle('pause') ?  player.play() : player.pause();
+    this.classList.toggle('pause') ? player.play() : player.pause();
   }, false);
 
   document.getElementById('stop').addEventListener('mousedown', function(){
@@ -190,10 +189,6 @@ var Player = function(songs){
         context.decodeAudioData(buffer, function(buffer) {
           audioBuffer = buffer;
           startPlaying(0);
-          
-          
-
-          console.log('Start playing');
         }, function(){
          console.log('Error encoding file ' + url);
         });
@@ -201,8 +196,6 @@ var Player = function(songs){
     }
     else{
       startPlaying(0, elapsedTime % audioBuffer.duration);
-      
-      console.log('Resuming at ',elapsedTime,'of',audioBuffer.duration);
     }
   },
   startPlaying = function(elapsed){
@@ -211,10 +204,12 @@ var Player = function(songs){
     source.connect(gainNode);
     source.loop = false;
     source.onended = function(e){
+      elapsedTime += context.currentTime - startTime;
       // this is also called when pausing
       if (audioBuffer.duration <= elapsedTime){
         if (source){source.stop(0);}
         target.dispatchEvent( createEvent('end') );
+        next();
       }
       elapsedTime = startTime = 0;
     }
@@ -222,7 +217,7 @@ var Player = function(songs){
     source.start(0, elapsed);
     
     target.dispatchEvent(createEvent('play', {
-        'elapsed': 0, 
+        'elapsed': elapsed, 
         'duration': audioBuffer.duration
       })
     );
@@ -293,9 +288,17 @@ var Playlist = function(items){
   current = function(){
     return items[index];
   },
+  getNext = function(){
+     if (items.length > index + 1){
+      return items[index+1]
+    }
+    return null;
+  },
   next = function(){
-    if (items.length > index + 1){
-      return items[++index]
+    var item = getNext();
+    if (item){
+      index++;
+      return item;
     }
     return null;
   },
@@ -314,6 +317,7 @@ var Playlist = function(items){
 
   return{
     current : current,
+    getNext : getNext,
     next  : next,
     previous : previous,
     reset : reset,
