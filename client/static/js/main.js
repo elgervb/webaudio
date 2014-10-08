@@ -189,6 +189,7 @@ var Player = function(songs){
       .then(function(buffer, url){
         context.decodeAudioData(buffer, function(buffer) {
           audioBuffer = buffer;
+          clear();
           startPlaying();
         }, function(){
          console.log('Error encoding file ' + url);
