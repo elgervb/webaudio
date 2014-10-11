@@ -115,11 +115,11 @@ new Loader('../server', 'json')
 
 
 
-var Player = function(songs){
+var Player = function(){
   var context = new AudioContext(), // the AudioContext
     audioBuffer,                    // the buffer of the current playing
     source,                         // current playing source
-    playlist = new Playlist(songs), // playlist
+    playlist = new Playlist(), // playlist
     startTime = 0,                  // internal start time for calculating the elapsedTime
     elapsedTime = 0,                // elapsed time playing (for pause / resume)
     gainNode = context.createGain(),// The master volume
