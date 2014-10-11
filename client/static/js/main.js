@@ -175,6 +175,11 @@ var Player = function(options){
   play = function() {
     // load new audio fragment
     if(!source){
+      if (state === 'loading'){
+        console.warn('Player is already loadiing. Please try again later.');
+        return; 
+      }
+      state = 'loading';
       target.dispatchEvent(createEvent('loading'));
       log('start loading...', playlist.current().path);
       new Loader('../server/stream/'+playlist.current().path)
