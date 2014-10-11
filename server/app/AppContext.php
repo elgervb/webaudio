@@ -7,6 +7,7 @@ class AppContext {
 	const DB_DIR = "cache";
 	const FILES_DB = '/cache/audioserver.sqlite';
 	const FILES_CREATE_QUERY = '/cache/audioserver.sql';
+	const SETTINGS_FILE = 'settings.json';
 	
 	private static $instance;
 	
@@ -32,5 +33,14 @@ class AppContext {
 		$repository->getModelConfiguration()->setIdGeneration("guid");
 		
 		return $repository;
+	}
+	
+	/**
+	 * Returns the settings 
+	 * @return ArrayObject
+	 */
+	public function getSettings(){
+		$json = file_get_contents(__DIR__. DIRECTORY_SEPARATOR. self::SETTINGS_FILE);
+		return new ArrayObject(json_decode($json, true));
 	}
 }
