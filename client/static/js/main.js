@@ -6,50 +6,6 @@
  * styling html5 slider: http://brennaobrien.com/blog/2014/05/style-input-type-range-in-every-browser.html
  * implement event model on custom object: http://stackoverflow.com/questions/15308371/custom-events-model-without-using-dom-events-in-javascript
  */
- var songs = [
-   {
-    url: 'static/music/explosion.ogg'
-  },
-  {
-    url: 'static/music/QOTSA-Little_Sister.ogg'
-  },
-  {
-    url: 'static/music/01 Mumford And Sons - Sigh No More.mp3'
-  },
-  {
-    url: 'static/music/02 Mumford And Sons - The Cave.mp3'
-  },
-  {
-    url: 'static/music/03 Mumford And Sons - Winter Winds.mp3'
-  },
-  {
-    url: 'static/music/04 Mumford And Sons - Roll Away Your Stone.mp3'
-  },
-  {
-    url: 'static/music/05 Mumford And Sons - White Blank Page.mp3'
-  },
-  {
-    url: 'static/music/06 Mumford And Sons - I Gave You All.mp3'
-  },
-  {
-    url: 'static/music/07 Mumford And Sons - Little Lion Man.mp3'
-  },
-  {
-    url: 'static/music/08 Mumford And Sons - Timshel.mp3'
-  },
-  {
-    url: 'static/music/09 Mumford And Sons - Thistle & Weeds.mp3'
-  },
-  {
-    url: 'static/music/10 Mumford And Sons - Awake My Soul.mp3'
-  },
-  {
-    url: 'static/music/11 Mumford And Sons - Dust Bowl Dance.mp3'
-  },
-  {
-    url: 'static/music/12 Mumford And Sons - After the Storm.mp3'
-  }
- ];
 var callbacks = {
     progress :  function(starttime, duration){
       var progress = document.getElementById('progress');
@@ -94,7 +50,7 @@ var callbacks = {
 
 document.addEventListener('DOMContentLoaded', function () {
 
-  var player = new Player(songs);
+  var player = new Player();
   player.addEventListener('stop', callbacks.stop, false);
   player.addEventListener('play', callbacks.play, false);
   player.addEventListener('pause', callbacks.pause, false);
@@ -124,8 +80,37 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('gainDisplay').value = this.value;
     player.gain(parseInt(this.value));
   }, false);
-  document.getElementById('gain').dispatchEvent(new Event('input'))
-});
+  document.getElementById('gain').dispatchEvent(new Event('input'));
+
+  /* GUI thingies */
+
+new Loader('../server', 'json')
+  .then(function(response){
+
+    player.playlist().add(response);
+
+    var playlist = document.getElementById('playlist');
+    response.forEach(function(s){
+      
+      var item = document.createElement('li');
+      item.dataset.guid = s.guid;
+      item.innerHTML = s.path;
+      playlist.appendChild(item);
+
+    });
+
+    var nodes = document.querySelectorAll('#playlist li');
+    for ( var i = 0; i< nodes.length; i++){
+      nodes[i].addEventListener('click', function(e){
+        var guid = this.dataset.guid;
+        player.playlist().goto(guid);
+        player.play();
+      }, false)
+    }
+
+  });
+
+}); // end DOMContentLoaded
 
 
 
@@ -185,7 +170,7 @@ var Player = function(songs){
     // load new audio fragment
     if(!source){
       target.dispatchEvent(createEvent('loading'));
-      new Loader(playlist.current().url)
+      new Loader('../server/stream/'+playlist.current().path)
       .then(function(buffer, url){
         context.decodeAudioData(buffer, function(buffer) {
           audioBuffer = buffer;
@@ -194,6 +179,9 @@ var Player = function(songs){
         }, function(){
          console.log('Error encoding file ' + url);
         });
+      })
+      .catch(function(error){
+        console.error(error.status, error.message);
       });
     }
     else{
@@ -261,18 +249,18 @@ var Player = function(songs){
     gain     : gain
   }
 };
-var Loader = function (url) {
+var Loader = function (url, responsetype) {
   return new Promise(function(resolve, reject){
     var request = new XMLHttpRequest()
     request.open('GET', url, true);
-    request.responseType = 'arraybuffer';
+    request.responseType = responsetype||'arraybuffer';
 
     request.onload = function(){
       if (request.status == 200) {
         resolve(request.response, url);
       }
       else{
-        reject(Error(request.statusText));
+        reject({status:request.status, message: request.statusText, response: request.response});
       }
     }
     // Handle network errors
@@ -285,15 +273,27 @@ var Loader = function (url) {
 };
 var Playlist = function(items){
   var index = 0,
+  songs = items||[],
+  add = function(add){
+    songs = songs.concat(add);
+  }
   current = function(){
-    return items[index];
+    return songs[index];
   },
   getNext = function(){
-     if (items.length > index + 1){
-      return items[index+1]
+     if (songs.length > index + 1){
+      return songs[index+1]
     }
     return null;
   },
+  goto = function(guid){
+    for ( var i in songs) {
+      if (songs[i].guid === guid){
+        index = parseInt(i);
+        return;
+      }
+    }
+  }
   next = function(){
     var item = getNext();
     if (item){
@@ -304,7 +304,7 @@ var Playlist = function(items){
   },
   previous = function(){
     if (index > 0 ){
-      return items[--index]
+      return songs[--index]
     }
     return null;
   },
@@ -316,11 +316,16 @@ var Playlist = function(items){
   };
 
   return{
+    add : add,
     current : current,
     getNext : getNext,
+    goto : goto,
     next  : next,
     previous : previous,
     reset : reset,
     shuffle : shuffle
   }
 };
+
+
+
