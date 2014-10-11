@@ -22,7 +22,6 @@ var callbacks = {
     },
     play : function(e){
       document.getElementById('play').classList.add('pause');
-      console.log('Play from',e.detail.elapsed,'of',e.detail.duration);
       clearInterval(progressTimer);
       callbacks.progress(e.detail.elapsed, e.detail.duration);
     },
@@ -32,14 +31,11 @@ var callbacks = {
     next : function(e){
       clearInterval(progressTimer);
       document.getElementById('play').classList.remove('pause');
-      console.log('Next song');
     },
     pause : function(e){
       clearInterval(progressTimer);
-      console.log('Pausing at ',e.detail.elapsed,'of',e.detail.duration );
     },
     end : function(e){
-      console.log('Finished song');
       var el = document.getElementById('progress');
       el.value = el.max;
       callbacks.stop();
@@ -50,7 +46,7 @@ var callbacks = {
 
 document.addEventListener('DOMContentLoaded', function () {
 
-  var player = new Player();
+  var player = new Player({debug: true});
   player.addEventListener('stop', callbacks.stop, false);
   player.addEventListener('play', callbacks.play, false);
   player.addEventListener('pause', callbacks.pause, false);
@@ -115,7 +111,7 @@ new Loader('../server', 'json')
 
 
 
-var Player = function(){
+var Player = function(options){
   var context = new AudioContext(), // the AudioContext
     audioBuffer,                    // the buffer of the current playing
     source,                         // current playing source
@@ -123,6 +119,7 @@ var Player = function(){
     startTime = 0,                  // internal start time for calculating the elapsedTime
     elapsedTime = 0,                // elapsed time playing (for pause / resume)
     gainNode = context.createGain(),// The master volume
+    options  = options || {},
   /**
    * Event target for even handling
    */
@@ -150,7 +147,13 @@ var Player = function(){
     source = null;
     elapsedTime = startTime = 0;
   },
+  log = function(msg){
+    if(options.debug){
+      console.log(msg);
+    }
+  },
   next = function(){
+    log("next song");
     clear();
     if (playlist.next()){
       target.dispatchEvent(createEvent('next') );
@@ -158,6 +161,7 @@ var Player = function(){
     }
   },
   pause = function(){
+    log('pause elapsed: '+elapsedTime+' duration: '+audioBuffer.duration );
     source.stop(0);
     elapsedTime += context.currentTime - startTime;
     target.dispatchEvent(createEvent('pause', {elapsed: elapsedTime, duration: audioBuffer.duration}));
@@ -170,21 +174,27 @@ var Player = function(){
     // load new audio fragment
     if(!source){
       target.dispatchEvent(createEvent('loading'));
+      log('start loading...', playlist.current().path);
       new Loader('../server/stream/'+playlist.current().path)
       .then(function(buffer, url){
+        log('loaded '+playlist.current().path);
+        log('reading...')
         context.decodeAudioData(buffer, function(buffer) {
           audioBuffer = buffer;
+          log("Start playing. Duration: "+ audioBuffer.duration);
           clear();
           startPlaying();
         }, function(){
-         console.log('Error encoding file ' + url);
+         log('Error encoding file ');
         });
       })
       .catch(function(error){
+        log('error loading '+ error.status +'-'+ error.message);
         console.error(error.status, error.message);
       });
     }
     else{
+      log("resume elapsed: "+context.currentTime - startTime +' duration '+ audioBuffer.duration);
       startPlaying();
     }
   },
@@ -195,13 +205,14 @@ var Player = function(){
     source.connect(gainNode);
     source.loop = false;
     source.onended = function(e){
+      log("onended called");
       var elapsed = context.currentTime - startTime;
       // this is also called when pausing
       if (audioBuffer.duration <= elapsed){
         if (source){source.stop(0);}
+        log("song ended");
         target.dispatchEvent( createEvent('end') );
         next();
-
         elapsedTime = startTime = 0;
       }
     }
@@ -215,19 +226,21 @@ var Player = function(){
     );
   },
   previous = function(){
+    log("previous");
     clear();
     if (playlist.previous()){
       target.dispatchEvent(createEvent('previous', {player: this}));
     }
   },
   stop = function(){
+    log("stop");
     clear();
     target.dispatchEvent(createEvent('stop'));
   },
   gain = function(gain){
     gainNode.gain.value = gain === 0 ? gain.toFixed(2) : (gain / 100).toFixed(2);
     target.dispatchEvent(createEvent('gain', {gain: gain.toFixed(2)}));
-    console.log('setting gain to ', gain.toFixed(0));
+    log('setting gain to '+ gain.toFixed(0));
   };
 
   // fix prefixing
