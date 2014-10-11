@@ -176,7 +176,7 @@ var Player = function(options){
     // load new audio fragment
     if(!source){
       if (state === 'loading'){
-        console.warn('Player is already loadiing. Please try again later.');
+        console.warn('Player is already loading. Please try again later.');
         return; 
       }
       state = 'loading';
