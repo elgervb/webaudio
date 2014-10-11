@@ -1,1 +1,4 @@
-{"scanfolder" : "C:/Users/elger/Music/iTunes/iTunes Media/Music/Johnny Cash"}
+{
+	"scanfolder" : "C:/Users/elger/Music/iTunes/iTunes Media/Music/Johnny Cash",
+	"scanExtensions" : ["mp3"]
+}

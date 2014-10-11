@@ -3,21 +3,26 @@
 namespace audio\scanner;
 
 class DirScanner{
-	
-		public static function scan($aDir){
-			$dirIterator = new \RecursiveDirectoryIterator( $aDir );
-			$dirIterator->setInfoClass('audio\scanner\SecureFileInfo');
-			
-			return new \CallbackFilterIterator(
-				new \RecursiveIteratorIterator(
-					$dirIterator,\RecursiveIteratorIterator::CHILD_FIRST
-				),
-				function($current, $key, $iterator) use ($aDir){
-					/* @var $current \SecureFileInfo */
-					$current->setRelativePath($aDir);
+	/**
+	 * Scans a directory for files with the given extensions
+	 * @param string|\SplFileInfo $aDir
+	 * @param array $aExtensions
+	 * @return \CallbackFilterIterator|boolean
+	 */
+	public static function scan($aDir, array $aExtensions){
+		$dirIterator = new \RecursiveDirectoryIterator( $aDir );
+		$dirIterator->setInfoClass('audio\scanner\SecureFileInfo');
+		
+		return new \CallbackFilterIterator(
+			new \RecursiveIteratorIterator(
+				$dirIterator,\RecursiveIteratorIterator::CHILD_FIRST
+			),
+			function($current, $key, $iterator) use ($aDir, $aExtensions){
+				/* @var $current \SecureFileInfo */
+				$current->setRelativePath($aDir);
 
-					return $current->isFile() && $current->getExtension() === 'mp3';
-				}
-			);
-		}
+				return $current->isFile() &&  in_array($current->getExtension(), $aExtensions);
+			}
+		);
 	}
+}
