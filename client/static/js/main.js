@@ -79,7 +79,6 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('gain').dispatchEvent(new Event('input'));
 
   /* GUI thingies */
-
 new Loader('../server', 'json')
   .then(function(response){
 
@@ -115,11 +114,12 @@ var Player = function(options){
   var context = new AudioContext(), // the AudioContext
     audioBuffer,                    // the buffer of the current playing
     source,                         // current playing source
-    playlist = new Playlist(), // playlist
+    playlist = new Playlist(),      // playlist
     startTime = 0,                  // internal start time for calculating the elapsedTime
     elapsedTime = 0,                // elapsed time playing (for pause / resume)
     gainNode = context.createGain(),// The master volume
     options  = options || {},
+    state = 'idle',                 // the state of the player idle, paused, playing, loading
   /**
    * Event target for even handling
    */
@@ -146,6 +146,7 @@ var Player = function(options){
     }
     source = null;
     elapsedTime = startTime = 0;
+    state='idle';
   },
   log = function(msg){
     if(options.debug){
@@ -161,7 +162,8 @@ var Player = function(options){
     }
   },
   pause = function(){
-    log('pause elapsed: '+elapsedTime+' duration: '+audioBuffer.duration );
+    state = 'paused';
+    log(state +' elapsed: '+elapsedTime+' duration: '+audioBuffer.duration );
     source.stop(0);
     elapsedTime += context.currentTime - startTime;
     target.dispatchEvent(createEvent('pause', {elapsed: elapsedTime, duration: audioBuffer.duration}));
@@ -177,7 +179,8 @@ var Player = function(options){
       log('start loading...', playlist.current().path);
       new Loader('../server/stream/'+playlist.current().path)
       .then(function(buffer, url){
-        log('loaded '+playlist.current().path);
+        state = 'loading';
+        log(state+' '+playlist.current().path);
         log('reading...')
         context.decodeAudioData(buffer, function(buffer) {
           audioBuffer = buffer;
@@ -193,9 +196,14 @@ var Player = function(options){
         console.error(error.status, error.message);
       });
     }
-    else{
+    else if (state === 'paused'){
       log("resume elapsed: "+context.currentTime - startTime +' duration '+ audioBuffer.duration);
       startPlaying();
+    }
+    else{
+      // Uhm, are we trying to play a new song while already playing another?
+      clear();
+      play();
     }
   },
   startPlaying = function(){
@@ -218,6 +226,7 @@ var Player = function(options){
     }
     
     source.start(0, elapsedTime);
+    state = 'playing';
     
     target.dispatchEvent(createEvent('play', {
         'elapsed': elapsedTime, 
