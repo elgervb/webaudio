@@ -338,6 +338,10 @@ var Playlist = function(items){
     }
     return null;
   },
+  remove = function(index){
+    index = index || 0;
+    songs.splice(index, 1);
+  },
   reset = function(){
     index = 0;
   },
@@ -352,6 +356,7 @@ var Playlist = function(items){
     goto : goto,
     next  : next,
     previous : previous,
+    remove : remove,
     reset : reset,
     shuffle : shuffle
   }
