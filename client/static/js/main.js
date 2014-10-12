@@ -106,29 +106,6 @@ new Loader('../server', 'json')
       }, false);
 
     });
-
-
-    // player.playlist().add(response);
-
-    // var playlist = document.getElementById('playlist');
-    // response.forEach(function(s){
-      
-    //   var item = document.createElement('li');
-    //   item.dataset.guid = s.guid;
-    //   item.innerHTML = s.path;
-    //   playlist.appendChild(item);
-
-    // });
-
-    // var nodes = document.querySelectorAll('#playlist li');
-    // for ( var i = 0; i< nodes.length; i++){
-    //   nodes[i].addEventListener('click', function(e){
-    //     var guid = this.dataset.guid;
-    //     player.playlist().goto(guid);
-    //     player.play();
-    //   }, false)
-    // }
-
   });
 
 }); // end DOMContentLoaded
