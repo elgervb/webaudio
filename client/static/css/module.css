@@ -56,14 +56,8 @@ header.top {
 }
 
 .leftpanel, .rightpanel{
-  position: absolute;
-  padding-top: 5px;
-  top: 175px;
-  width: 50%;
+  margin-top: 175px;
   z-index: 3;
-}
-.leftpanel{
-  left: 0;
 }
   .menu-left li {
       border-bottom: 1px solid #FFFFFF;
