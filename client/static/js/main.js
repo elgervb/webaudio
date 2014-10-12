@@ -80,28 +80,54 @@ document.addEventListener('DOMContentLoaded', function () {
 
   /* GUI thingies */
 new Loader('../server', 'json')
-  .then(function(response){
+  .then(function(tracks){
 
-    player.playlist().add(response);
-
-    var playlist = document.getElementById('playlist');
-    response.forEach(function(s){
-      
+    var library = document.getElementById('library');
+    tracks.forEach(function(track){
       var item = document.createElement('li');
-      item.dataset.guid = s.guid;
-      item.innerHTML = s.path;
-      playlist.appendChild(item);
+      item.dataset.guid = track.guid;
+      item.innerHTML = track.path;
+      library.appendChild(item);
+
+      item.addEventListener('click', function(){
+        var playlist = document.getElementById('playlist');
+        var item = document.createElement('li');
+        item.dataset.guid = track.guid;
+        item.innerHTML = track.path;
+        playlist.appendChild(item);
+        player.playlist().add([track]);
+
+        item.addEventListener('click', function(e){
+          var guid = this.dataset.guid;
+          player.playlist().goto(guid);
+          player.play();
+        }, false);
+
+      }, false);
 
     });
 
-    var nodes = document.querySelectorAll('#playlist li');
-    for ( var i = 0; i< nodes.length; i++){
-      nodes[i].addEventListener('click', function(e){
-        var guid = this.dataset.guid;
-        player.playlist().goto(guid);
-        player.play();
-      }, false)
-    }
+
+    // player.playlist().add(response);
+
+    // var playlist = document.getElementById('playlist');
+    // response.forEach(function(s){
+      
+    //   var item = document.createElement('li');
+    //   item.dataset.guid = s.guid;
+    //   item.innerHTML = s.path;
+    //   playlist.appendChild(item);
+
+    // });
+
+    // var nodes = document.querySelectorAll('#playlist li');
+    // for ( var i = 0; i< nodes.length; i++){
+    //   nodes[i].addEventListener('click', function(e){
+    //     var guid = this.dataset.guid;
+    //     player.playlist().goto(guid);
+    //     player.play();
+    //   }, false)
+    // }
 
   });
 
