@@ -197,6 +197,7 @@ var Player = function(options){
           startPlaying();
         }, function(){
          log('Error encoding file ');
+         stop(); // try to fix loading issue
         });
       })
       .catch(function(error){
