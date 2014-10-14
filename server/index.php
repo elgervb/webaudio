@@ -1,7 +1,8 @@
 <?php
-use core\ClassLoader;
 
-include '../../../framework/core/Classloader.php';
-$loader = ClassLoader::create();
-$loader->addClassPath('app/lib');
+include 'phar://app/vendor/framework-1.1.0.phar';
+
+core\ClassLoader::create()
+  ->addClassPath('./app')
+  ->addClassPath('./app/lib');
 core\FrontController::start();
