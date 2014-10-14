@@ -28,13 +28,6 @@ class IndexController implements IController
 		return new Json($repository->search());
 	}
 	
-	
-	public function streamAction($aFile){
-		$settings = \AppContext::get()->getSettings();
-		$file = $settings->offsetGet('scanfolder') . DIRECTORY_SEPARATOR . $aFile;
-		
-		return new DownloadAction(new \SplFileInfo($file));
-	}
 	/**
 	 * Scans the remote music library for music files
 	 *
@@ -51,9 +44,9 @@ class IndexController implements IController
 		$files = DirScanner::scan($settings->offsetGet('scanfolder'), $settings->offsetGet('scanExtensions'));
 
 		// remove the database
-		$db = Context::get()->getBasePath(\AppContext::FILES_DB);
+		$db = Context::get()->getBasePath('app/'.\AppContext::FILES_DB);
 		if ($db->isFile()){
-			unlink($db);
+			Filesystem::deleteFile($db);
 		}
 		
 		// create repository & database
@@ -66,5 +59,12 @@ class IndexController implements IController
 		}
 		
 		return new Redirect(UrlUtils::siteUrl());
+	}
+	
+	public function streamAction($aFile){
+		$settings = \AppContext::get()->getSettings();
+		$file = $settings->offsetGet('scanfolder') . DIRECTORY_SEPARATOR . $aFile;
+	
+		return new DownloadAction(new \SplFileInfo($file));
 	}
 }
