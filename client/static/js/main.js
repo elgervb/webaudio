@@ -182,6 +182,10 @@ var Player = function(options){
         console.warn('Player is already loading. Please try again later.');
         return; 
       }
+      if (playlist.size() <= 0){ // nothing to play
+        target.dispatchEvent(createEvent('stop'));
+        return;
+      }
       state = 'loading';
       target.dispatchEvent(createEvent('loading'));
       log('start loading...', playlist.current().path);
@@ -348,6 +352,9 @@ var Playlist = function(items){
   },
   shuffle = function(){
     // TODO
+  },
+  size = function(){
+    return songs.length;
   };
 
   return{
@@ -359,7 +366,8 @@ var Playlist = function(items){
     previous : previous,
     remove : remove,
     reset : reset,
-    shuffle : shuffle
+    shuffle : shuffle,
+    size : size
   }
 };
 
