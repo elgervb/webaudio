@@ -210,7 +210,7 @@ var Player = function(options){
       });
     }
     else if (state === 'paused'){
-      log("resume elapsed: "+context.currentTime - startTime +' duration '+ audioBuffer.duration);
+      log("resume elapsed: "+ (context.currentTime - startTime) +' duration '+ audioBuffer.duration);
       startPlaying();
     }
     else{
