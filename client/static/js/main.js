@@ -166,9 +166,9 @@ var Player = function(options){
   },
   pause = function(){
     state = 'paused';
-    log(state +' elapsed: '+elapsedTime+' duration: '+audioBuffer.duration );
-    source.stop(0);
     elapsedTime += context.currentTime - startTime;
+    log(state +' elapsed: '+ elapsedTime +' duration: '+audioBuffer.duration );
+    source.stop(0);
     target.dispatchEvent(createEvent('pause', {elapsed: elapsedTime, duration: audioBuffer.duration}));
   },
   /**
@@ -210,7 +210,7 @@ var Player = function(options){
       });
     }
     else if (state === 'paused'){
-      log("resume elapsed: "+ (context.currentTime - startTime) +' duration '+ audioBuffer.duration);
+      log("resume elapsed: "+ elapsedTime +' duration '+ audioBuffer.duration);
       startPlaying();
     }
     else{
