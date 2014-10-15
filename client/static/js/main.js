@@ -202,7 +202,7 @@ var Player = function(options){
       })
       .catch(function(error){
         log('error loading '+ error.status +'-'+ error.message);
-        console.error(error.status, error.message);
+        clear();
       });
     }
     else if (state === 'paused'){

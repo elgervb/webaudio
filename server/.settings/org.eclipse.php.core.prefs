@@ -1,3 +1,4 @@
+#Tue Oct 14 20:06:21 CEST 2014
 eclipse.preferences.version=1
-include_path=
+include_path=1;/webaudioserver/app/vendor/framework-1.1.0.phar
 use_asp_tags_as_php=false
