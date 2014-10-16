@@ -9,8 +9,8 @@
 var callbacks = {
     progress :  function(starttime, duration){
       var progress = document.getElementById('progress');
-      progress.max = duration.toFixed(1);
-      progress.value=starttime.toFixed(1);
+      progress.max = parseFloat(duration.toFixed(1));
+      progress.value = parseFloat(starttime.toFixed(1));
       progressTimer = setInterval(function(){
       progress.value = parseFloat(progress.value) + .1;
       }, 100);
@@ -132,7 +132,7 @@ var Player = function(options){
     elapsedTime = 0,                // elapsed time playing (for pause / resume)
     gainNode = context.createGain(),// The master volume
     options  = options || {},
-    state = 'idle',                 // the state of the player idle, paused, playing, loading
+    state = 'idle',                 // the state of the player idle, pause, playing, loading ()
   /**
    * Event target for even handling
    */
@@ -176,8 +176,6 @@ var Player = function(options){
   },
   pause = function(){
     state = 'paused';
-    elapsedTime += context.currentTime - startTime;
-    log(state +' elapsed: '+ elapsedTime +' duration: '+audioBuffer.duration );
     source.stop(0);
     target.dispatchEvent(createEvent('pause', {elapsed: elapsedTime, duration: audioBuffer.duration}));
   },
@@ -220,7 +218,7 @@ var Player = function(options){
       });
     }
     else if (state === 'paused'){
-      log("resume elapsed: "+ elapsedTime +' duration '+ audioBuffer.duration);
+      //log("resume elapsed: "+ elapsedTime +' duration '+ audioBuffer.duration);
       startPlaying();
     }
     else{
@@ -230,16 +228,17 @@ var Player = function(options){
     }
   },
   startPlaying = function(){
-    startTime = context.currentTime;
+    
     source = context.createBufferSource();
     source.buffer = audioBuffer;
     source.connect(gainNode);
     source.loop = false;
     source.onended = function(e){
       log("onended called");
-      var elapsed = context.currentTime - startTime;
+      elapsedTime += parseFloat((context.currentTime - startTime).toFixed(2));
+      log(state +' elapsed: '+ elapsedTime +' duration: '+audioBuffer.duration );
       // this is also called when pausing
-      if (audioBuffer.duration <= elapsed){
+      if (audioBuffer.duration <= elapsedTime){
         if (source){source.stop(0);}
         log("song ended");
         target.dispatchEvent( createEvent('end') );
@@ -248,8 +247,13 @@ var Player = function(options){
       }
     }
     
+    // if (state!='paused'){
+      startTime = context.currentTime;
+    // }
     source.start(0, elapsedTime);
     state = 'playing';
+
+    log(state +' elapsed: '+ elapsedTime +' duration: '+audioBuffer.duration );
     
     target.dispatchEvent(createEvent('play', {
         'elapsed': elapsedTime, 
@@ -270,8 +274,8 @@ var Player = function(options){
     target.dispatchEvent(createEvent('stop'));
   },
   gain = function(gain){
-    gainNode.gain.value = gain === 0 ? gain.toFixed(2) : (gain / 100).toFixed(2);
-    target.dispatchEvent(createEvent('gain', {gain: gain.toFixed(2)}));
+    gainNode.gain.value = gain === 0 ? parseFloat(gain.toFixed(2)) : parseFloat((gain / 100).toFixed(2));
+    target.dispatchEvent(createEvent('gain', {gain: parseFloat(gain.toFixed(2))}));
     log('setting gain to '+ gain.toFixed(0));
   };
 
