@@ -27,6 +27,12 @@
 	min-width: 320px;
 	width: 75%;
 }
+#gainDisplay{
+	display: inline-block;
+	text-align: left;
+	width: 50px;
+}
+
 
 input[type='range'], input[type='range']::-moz-range-track{
 	-webkit-appearance: none;
