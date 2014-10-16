@@ -201,8 +201,10 @@ var Player = function(options){
       .then(function(buffer, url){
         state = 'loading';
         log(state+' '+playlist.current().path);
-        log('reading...')
+        log('reading...');
+        var beginTime = new Date().getTime();
         context.decodeAudioData(buffer, function(buffer) {
+          log( "Reading took " + (new Date().getTime() - beginTime) / 1000 + 'ms' );
           audioBuffer = buffer;
           log("Start playing. Duration: "+ audioBuffer.duration);
           clear();
@@ -300,12 +302,14 @@ var Player = function(options){
 };
 var Loader = function (url, responsetype) {
   return new Promise(function(resolve, reject){
-    var request = new XMLHttpRequest()
+    var request = new XMLHttpRequest(),
+    beginTime = new Date().getTime();
     request.open('GET', url, true);
     request.responseType = responsetype||'arraybuffer';
 
     request.onload = function(){
       if (request.status == 200) {
+        console.log( "Loading took " + (new Date().getTime() - beginTime) / 1000 + 'ms' );
         resolve(request.response, url);
       }
       else{
