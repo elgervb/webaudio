@@ -78,35 +78,45 @@ document.addEventListener('DOMContentLoaded', function () {
   }, false);
   document.getElementById('gain').dispatchEvent(new Event('input'));
 
-  /* GUI thingies */
-new Loader('../server', 'json')
-  .then(function(tracks){
 
-    var library = document.getElementById('library');
-    tracks.forEach(function(track){
+var buildGUI =  function(tracks){
+  var library = document.getElementById('library');
+  tracks.forEach(function(track){
+    var item = document.createElement('li');
+    item.dataset.guid = track.guid;
+    item.innerHTML = track.path;
+    library.appendChild(item);
+
+    item.addEventListener('click', function(){
+      var playlist = document.getElementById('playlist');
       var item = document.createElement('li');
       item.dataset.guid = track.guid;
       item.innerHTML = track.path;
-      library.appendChild(item);
+      playlist.appendChild(item);
+      player.playlist().add([track]);
 
-      item.addEventListener('click', function(){
-        var playlist = document.getElementById('playlist');
-        var item = document.createElement('li');
-        item.dataset.guid = track.guid;
-        item.innerHTML = track.path;
-        playlist.appendChild(item);
-        player.playlist().add([track]);
-
-        item.addEventListener('click', function(e){
-          var guid = this.dataset.guid;
-          player.playlist().goto(guid);
-          player.play();
-        }, false);
-
+      item.addEventListener('click', function(e){
+        var guid = this.dataset.guid;
+        player.playlist().goto(guid);
+        player.play();
       }, false);
 
-    });
+    }, false);
+
   });
+}
+// Get library from server
+if (localStorage.length > 0 && !localStorage.getItem('local.library')){
+  new Loader('../server/', 'json')
+    .then(function(tracks){
+      localStorage.setItem('local.library', JSON.stringify(tracks) );
+      buildGUI(tracks);
+    });
+}
+else{
+  buildGUI( JSON.parse(localStorage.getItem('local.library')) );
+}
+
 
 }); // end DOMContentLoaded
 
