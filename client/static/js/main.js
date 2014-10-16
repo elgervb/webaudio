@@ -176,6 +176,9 @@ var Player = function(options){
       target.dispatchEvent(createEvent('next') );
       play();
     }
+    else{
+      target.dispatchEvent(createEvent('stop'));
+    }
   },
   pause = function(){
     state = 'paused';
@@ -272,7 +275,11 @@ var Player = function(options){
     log("previous");
     clear();
     if (playlist.previous()){
-      target.dispatchEvent(createEvent('previous', {player: this}));
+      target.dispatchEvent(createEvent('previous'));
+      play();
+    }
+    else{
+      target.dispatchEvent(createEvent('stop'));
     }
   },
   stop = function(){
