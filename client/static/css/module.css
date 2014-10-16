@@ -32,6 +32,9 @@
 	text-align: left;
 	width: 50px;
 }
+.now-playing{
+	padding-bottom: 0;
+}
 
 
 input[type='range'], input[type='range']::-moz-range-track{
@@ -52,7 +55,7 @@ input[type='range']::-webkit-slider-thumb, input[type='range']::-moz-range-thumb
 
 .main{
   height: 100%;
-  padding-top: 175px; 
+  padding-top: 180px; 
 }
 
 header.top {

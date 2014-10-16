@@ -24,6 +24,8 @@ var callbacks = {
       document.getElementById('play').classList.add('pause');
       clearInterval(progressTimer);
       callbacks.progress(e.detail.elapsed, e.detail.duration);
+
+      document.querySelector('.now-playing').innerHTML = e.detail.track.path;
     },
     loading : function(e){
 
@@ -133,6 +135,7 @@ var Player = function(options){
     gainNode = context.createGain(),// The master volume
     options  = options || {},
     state = 'idle',                 // the state of the player idle, pause, playing, loading ()
+    nowPlaying
   /**
    * Event target for even handling
    */
@@ -208,6 +211,7 @@ var Player = function(options){
           audioBuffer = buffer;
           log("Start playing. Duration: "+ audioBuffer.duration);
           clear();
+          nowPlaying = playlist.current();
           startPlaying();
         }, function(){
          log('Error encoding file ');
@@ -259,7 +263,8 @@ var Player = function(options){
     
     target.dispatchEvent(createEvent('play', {
         'elapsed': elapsedTime, 
-        'duration': audioBuffer.duration
+        'duration': audioBuffer.duration,
+        'track': nowPlaying
       })
     );
   },
