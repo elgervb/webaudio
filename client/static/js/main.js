@@ -321,7 +321,7 @@ var Playlist = function(items){
   songs = items||[],
   add = function(add){
     songs = songs.concat(add);
-  }
+  },
   current = function(){
     return songs[index];
   },
@@ -338,7 +338,7 @@ var Playlist = function(items){
         return;
       }
     }
-  }
+  },
   next = function(){
     var item = getNext();
     if (item){
