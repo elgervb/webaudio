@@ -63,28 +63,6 @@ header.top {
   overflow: auto;
   z-index: 3;
 }
-  .menu-left li {
-      border-bottom: 1px solid #FFFFFF;
-      transition: all .4s ease 0s;
-  }
-  .menu-left li.active{
-    background-color: rgba(64, 130, 160, 0.3);
-  }
-  .menu-left li:hover {
-      background: #dddddd;
-  }
-  .menu-left li:first-child a{
-    border-top: 1px solid #999999;
-  }
-  .menu-left li a {
-      border-bottom: 1px solid #999999;
-      color: #255977;
-      display: block;
-      font-size: 16px;
-      overflow: hidden;
-      padding: 15px 10px;
-      text-decoration: none;
-  }
 
 .rightpanel{
   right: 0;
