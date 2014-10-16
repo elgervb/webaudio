@@ -106,7 +106,7 @@ var buildGUI =  function(tracks){
   });
 }
 // Get library from server
-if (localStorage.length > 0 && !localStorage.getItem('local.library')){
+if (localStorage.length == 0 || !localStorage.getItem('local.library')){
   new Loader('../server/', 'json')
     .then(function(tracks){
       localStorage.setItem('local.library', JSON.stringify(tracks) );
