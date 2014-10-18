@@ -354,7 +354,7 @@ var Playlist = function(items){
   },
   clear = function(){
     index = 0;
-    songs = {};
+    songs = [];
   },
   current = function(){
     return songs[index];
