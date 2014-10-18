@@ -237,7 +237,6 @@ var Player = function(options){
     }
   },
   startPlaying = function(){
-    
     source = context.createBufferSource();
     source.buffer = audioBuffer;
     source.connect(gainNode);
@@ -247,7 +246,7 @@ var Player = function(options){
       elapsedTime += parseFloat((context.currentTime - startTime).toFixed(2));
       log(state +' elapsed: '+ elapsedTime +' duration: '+audioBuffer.duration );
       // this is also called when pausing
-      if (audioBuffer.duration <= elapsedTime){
+      if ( startTime > 0 && audioBuffer.duration <= elapsedTime){
         if (source){source.stop(0);}
         log("song ended");
         target.dispatchEvent( createEvent('end') );
@@ -256,9 +255,7 @@ var Player = function(options){
       }
     }
     
-    // if (state!='paused'){
-      startTime = context.currentTime;
-    // }
+    startTime = context.currentTime;
     source.start(0, elapsedTime);
     state = 'playing';
 
