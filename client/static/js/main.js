@@ -182,8 +182,10 @@ var Player = function(options){
   },
   pause = function(){
     state = 'paused';
-    source.stop(0);
-    target.dispatchEvent(createEvent('pause', {elapsed: elapsedTime, duration: audioBuffer.duration}));
+    if (source){
+      source.stop(0);
+      target.dispatchEvent(createEvent('pause', {elapsed: elapsedTime, duration: audioBuffer.duration}));
+    }
   },
   /**
    * Play the current file
