@@ -70,9 +70,33 @@ header.top {
 .leftpanel, .rightpanel{
   height: 100%;
   overflow: auto;
+  position: relative;
   z-index: 3;
 }
 
 .rightpanel{
   right: 0;
+}
+
+.settings{
+	background: rgba(255, 255, 255, 0.75);
+	bottom: 0;
+	padding: 3px 10px;
+	position: fixed;
+	width: 100%;
+}
+.settings .action{
+	display: inline-block;
+	height: 32px;
+	opacity: .2;
+	text-overflow: hidden;
+	text-indent: -99999px;
+	transition: all .3s ease-in 0s;
+	width: 32px;
+}
+.settings .action:hover{
+	opacity: .8;
+}
+.clear-playlist{
+	background: transparent url(img/clear.png) no-repeat center center;
 }
