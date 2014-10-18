@@ -91,6 +91,22 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
+  document.getElementById('filter').addEventListener('change', function(){
+    var nodes = document.querySelectorAll('#library li');
+    if (!nodes){return;}
+    for(var i=0;i<nodes.length;i++){
+      var node = nodes[i];
+      if (node.innerHTML.toLowerCase().contains(this.value)){
+        if (node.classList.contains('hide')){
+          node.classList.remove('hide');
+        }
+      }
+      else{
+        node.classList.add('hide');
+      }
+    }
+  }, false);
+
 
 var buildGUI =  function(tracks){
   var library = document.getElementById('library');
@@ -115,8 +131,10 @@ var buildGUI =  function(tracks){
       }, false);
 
     }, false);
-
   });
+  if (document.getElementById('filter').value){
+      document.getElementById('filter').dispatchEvent(new Event('change'));
+    }
 }
 // Get library from server
 if (localStorage.length == 0 || !localStorage.getItem('local.library')){
@@ -198,6 +216,11 @@ var Player = function(options){
       target.dispatchEvent(createEvent('pause', {elapsed: elapsedTime, duration: audioBuffer.duration}));
     }
   },
+  encodeURIComponents = function(uri){
+    return encodeURI(uri)
+      .replace(/\+/, encodeURIComponent("+"))
+      .replace(/%20/g,'+');
+  },
   /**
    * Play the current file
    * @param callback executed when playing with params starttime, duration
@@ -216,7 +239,7 @@ var Player = function(options){
       state = 'loading';
       target.dispatchEvent(createEvent('loading'));
       log('start loading...', playlist.current().path);
-      new Loader('../server/stream/'+playlist.current().path)
+      new Loader( encodeURIComponents( '../server/stream/'+ playlist.current().path ) )
       .then(function(buffer, url){
         state = 'loading';
         log(state+' '+playlist.current().path);
