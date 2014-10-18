@@ -80,6 +80,17 @@ document.addEventListener('DOMContentLoaded', function () {
   }, false);
   document.getElementById('gain').dispatchEvent(new Event('input'));
 
+  // EVENT LISTENERS for playlist & library
+  document.querySelector('.clear-playlist').addEventListener('click', function(e){
+    e.preventDefault();
+    player.playlist().clear();
+
+    var nodes = document.querySelectorAll('#playlist li');
+    for (var i = 0; i < nodes.length; i++){
+      document.getElementById('playlist').removeChild(nodes[i]);
+    }
+  });
+
 
 var buildGUI =  function(tracks){
   var library = document.getElementById('library');
@@ -341,6 +352,10 @@ var Playlist = function(items){
   add = function(add){
     songs = songs.concat(add);
   },
+  clear = function(){
+    index = 0;
+    songs = {};
+  },
   current = function(){
     return songs[index];
   },
@@ -388,6 +403,7 @@ var Playlist = function(items){
 
   return{
     add : add,
+    clear : clear,
     current : current,
     getNext : getNext,
     goto : goto,
