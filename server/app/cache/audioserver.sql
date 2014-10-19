@@ -6,5 +6,11 @@ CREATE TABLE "files" (
     "last_modified" REAL,
     "size" INTEGER,
     "type" TEXT,
-    "path" TEXT
+    "path" TEXT,
+    "id3" TEXT,
+    "album" TEXT,
+    "artist" TEXT,
+    "genre" TEXT,
+    "title" TEXT,
+    "year" INTEGER
 );

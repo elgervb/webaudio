@@ -1,6 +1,8 @@
 <?php
 namespace app\page;
 
+use id3\Id3v2;
+
 use core\mvc\IController;
 use core\mvc\impl\json\Json;
 
@@ -29,12 +31,14 @@ class IndexController implements IController
 		return new Json($repository->search());
 	}
 	
+	
 	/**
 	 * Scans the remote music library for music files
 	 *
 	 * @return Redirect Redirects the page to the index page to serve a list of files scanned
 	 */
 	public function scanAction(){
+		
 		// init: disable HTTP cache & set time limit to unlimited for large libraries
 		Context::get()->getHttpContext()->getResponse()->disableCache();
 		set_time_limit(0);
@@ -52,10 +56,20 @@ class IndexController implements IController
 		
 		// create repository & database
 		$repository = \AppContext::get()->getRepository();
+		$id3 = new Id3v2();
 		
 		// save all models
 		foreach ($files as $file){
 			$model = ModelUtils::fileToModel($file);
+			
+			$tags = $id3->read( $settings->offsetGet('scanfolder') . DIRECTORY_SEPARATOR . $model->{'path'} );
+			$model->{'id3'} = $tags->{'id3'};
+			$model->{'album'} = $tags->{'album'};
+			$model->{'artist'} = $tags->{'artist'};
+			$model->{'genre'} = $tags->{'genre'};
+			$model->{'title'} = $tags->{'title'};
+			$model->{'year'} = $tags->{'year'};
+			
 			$repository->save($model);
 		}
 		
