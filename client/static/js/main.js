@@ -106,6 +106,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
   }, false);
+  
 
 
 var buildGUI =  function(tracks){
