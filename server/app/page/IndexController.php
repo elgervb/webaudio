@@ -2,6 +2,7 @@
 namespace app\page;
 
 use id3\Id3v2;
+use id3\Id3Exception;
 
 use core\mvc\IController;
 use core\mvc\impl\json\Json;
@@ -31,6 +32,10 @@ class IndexController implements IController
 		return new Json($repository->search());
 	}
 	
+	public function testAction(){
+		$id3 = new Id3v2();
+		$id3->read( '\\\\pc04258\\Music\\Boards of Canada\\Geogaddi\\18 - over the horizon radar.mp3');
+	}
 	
 	/**
 	 * Scans the remote music library for music files
@@ -62,13 +67,18 @@ class IndexController implements IController
 		foreach ($files as $file){
 			$model = ModelUtils::fileToModel($file);
 			
-			$tags = $id3->read( $settings->offsetGet('scanfolder') . DIRECTORY_SEPARATOR . $model->{'path'} );
-			$model->{'id3'} = $tags->{'id3'};
-			$model->{'album'} = $tags->{'album'};
-			$model->{'artist'} = $tags->{'artist'};
-			$model->{'genre'} = $tags->{'genre'};
-			$model->{'title'} = $tags->{'title'};
-			$model->{'year'} = $tags->{'year'};
+			try{
+				$tags = $id3->read( $settings->offsetGet('scanfolder') . DIRECTORY_SEPARATOR . $model->{'path'} );
+				$model->{'id3'} = $tags->{'id3'};
+				$model->{'album'} = $tags->{'album'};
+				$model->{'artist'} = $tags->{'artist'};
+				$model->{'genre'} = $tags->{'genre'};
+				$model->{'title'} = $tags->{'title'};
+				$model->{'year'} = $tags->{'year'};
+				$model->{'track'} = $tags->{'track'};
+			}catch(Id3Exception $ex){
+				//
+			}
 			
 			$repository->save($model);
 		}

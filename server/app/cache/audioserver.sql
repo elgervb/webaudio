@@ -12,5 +12,6 @@ CREATE TABLE "files" (
     "artist" TEXT,
     "genre" TEXT,
     "title" TEXT,
-    "year" INTEGER
+    "year" INTEGER,
+    "track" INTEGER
 );

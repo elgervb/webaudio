@@ -43,6 +43,8 @@ final class Bootstrap implements IBootstrap
 		$router->register( 'index', Route::create( Route::ROUTE_ROOT )->setController( "Index" )->setAction( "index" ) );
 		$router->register( 'scan', Route::create( '^/scan$' )->setController( "Index" )->setAction( "scan" ) );
 		$router->register( 'stream', Route::create( '^/stream/(?<arg>.*)$' )->setController( "Index" )->setAction( "stream" ) );
+
+		$router->register( 'test', Route::create( '^/test$' )->setController( "Index" )->setAction( "test" ) );
 		
 		return $router;
 	}

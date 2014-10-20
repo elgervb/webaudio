@@ -58,7 +58,20 @@ class Id3v2
 		$reader->open();
 		
 		$binRead = $reader->read( 10 );
-		$header = unpack( "a3signature/c1version_major/c1version_minor/c1flags/Nsize", $binRead );
+		try{
+			$header = unpack( "a3signature/c1version_major/c1version_minor/c1flags/Nsize", $binRead );
+		}
+		catch ( \ErrorException $ex){
+			Logger::get()->logWarning( 'Unable to unpack IDv3 header');
+			return $result;
+		}
+		$totalSize = $header['size'];
+		$fileSize = filesize($path);
+
+		if ($totalSize >= $fileSize){
+			$reader->close();
+			throw new Id3Exception( 'Size read from header is larger than the file itself... s' );
+		}
 		
 		if (! $header['signature'] == 'ID3')
 		{
@@ -67,26 +80,36 @@ class Id3v2
 		}
 		
 		Logger::get()->logFinest( "Found ID3V2." . $header['version_major'] . "." . $header['version_minor'] . " of total size " . $header['size'] . ' for file ' . $path);
-		
+
 		$result->{'size'} = $header['size'];
 		$result->{'id3'} = $header['signature'] . "v" . $header['version_major'] . "." . $header['version_minor'] . "." . $header['flags'];
 		
+		if ($header['version_major'] < 2){
+			Logger::get()->logError( 'Non compatible ID3 version found ' . $result->{'id3'} );
+			$reader->close();
+			return $result;
+		}
+
 		$endRead = str_repeat( pack( 'x' ), 4 );
 		while ($reader->getBytesRead() < $header['size'])
 		{
 			$tag = $reader->read( 4 );
+			$totalSize -= 4;
 			if ($tag === $endRead || ! preg_match( "/[a-z0-0]/i", $tag ))
 			{
+				$reader->close();
 				return $result;
 			}
 			
 			$binRead = $reader->read( 4 );
+			$totalSize -= 4;
 			$size = unpack( 'N', $binRead );
 			$size = $size[1]; 
 			
 			if ($size > 0)
 			{
 				$binRead = $reader->read( 2 );
+				$totalSize -= 2;
 				$flags = unpack( 'c2', $binRead );
 				
 				if (($header['size'] - $reader->getBytesRead() - $size) < 0)
@@ -94,7 +117,14 @@ class Id3v2
 					Logger::get()->logWarning( "Tried to read more than allowed for file " . $path . ' on tag ' . $tag );
 					break;
 				}
+			
+				$totalSize -= $size;
+				if($totalSize < 0){
+					Logger::get()->logWarning( "Tried to read more than allowed for file " . $path . ' on tag ' . $tag );
+					break;
+				}
 				$value = $reader->read( $size );
+				
 				$key = (isset( self::$tags[$tag] ) ? self::$tags[$tag] : $tag);
 				
 				if ($key === 'PRIV')
