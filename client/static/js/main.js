@@ -110,18 +110,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 var buildGUI =  function(tracks){
-  var library = document.getElementById('library');
+  var displayTrack = function(track){
+    if (track.artist && track.album){
+      return track.artist + ' - ' + track.album + " " + track.track + " " + track.title;
+    }
+    return track.path;
+  },
+  library = document.getElementById('library');
   tracks.forEach(function(track){
     var item = document.createElement('li');
     item.dataset.guid = track.guid;
-    item.innerHTML = track.path;
+    item.innerHTML = displayTrack(track);
     library.appendChild(item);
 
     item.addEventListener('click', function(){
       var playlist = document.getElementById('playlist');
       var item = document.createElement('li');
       item.dataset.guid = track.guid;
-      item.innerHTML = track.path;
+      item.innerHTML = displayTrack(track);
       playlist.appendChild(item);
       player.playlist().add([track]);
 
