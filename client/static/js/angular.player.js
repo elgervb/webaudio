@@ -23,8 +23,9 @@ var playerApp = angular.module('player', [])
 
   }])
 
-  .controller('LibraryController', ['$scope', 'player', function($scope, player){
+  .controller('LibraryController', ['$scope', '$rootScope', 'player', function($scope, $rootScope, player){
 
+    $scope.filter = 'muse';
     // Get library from server
     if (localStorage.length == 0 || !localStorage.getItem('local.library')){
       new Loader('../server/', 'json')
@@ -37,11 +38,21 @@ var playerApp = angular.module('player', [])
       $scope.tracks = JSON.parse(localStorage.getItem('local.library'));
     }
 
+    $scope.addToPlaylist = function(track){
+      console.log('send add to playlist');
+      $rootScope.$broadcast('addToPlayList', track);
+    }
+
   }])
 
-  .controller('PlaylistController', ['$scope', 'player', function($scope, player){
+  .controller('PlaylistController', ['$scope', '$rootScope', 'player', function($scope, $rootScope, player){
 
-
+    $scope.tracks = [];
+    $scope.$on('addToPlayList', function(event, track){
+      console.log('receive add to playlist ' + track.path);
+      player.playlist().add(track);
+      $scope.tracks.push(track);
+    });
 
   }]);
 

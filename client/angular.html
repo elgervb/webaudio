@@ -10,7 +10,6 @@
 		<link href="static/css/module.css" rel="stylesheet">
 	</head>
 	<body>
-		
 		<!-- Controls -->
 		<header class="top clearfix" ng-controller="ControlsController">
 			<div class="wrap-btn small">
@@ -39,9 +38,11 @@
 		<section class="main">
 
 			<!-- Playlist -->
-			<div class="leftpanel col-50">
+			<div class="leftpanel col-50" ng-controller="PlaylistController">
 				<ul id="playlist">
-
+					<li ng-repeat="track in tracks" ng-click="play(track)">
+					{{track.path}}
+					</li>
 				</ul>
 				<div class="settings">
 					<a href="#" class="action clear-playlist" title="Clear playlist">Clear playlist</a>
@@ -52,7 +53,7 @@
 			<!-- Library -->
 			<div class="rightpanel col-50" ng-controller="LibraryController">
 				<ul id="library">
-					<li ng-repeat="track in tracks | filter:filter">
+					<li ng-repeat="track in tracks | filter:filter" ng-click="addToPlaylist(track)">
 					{{track.path}}
 					</li>
 				</ul>
