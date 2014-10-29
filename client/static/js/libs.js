@@ -3,9 +3,12 @@
  *
  * 
  * Events:
- *  - stop: when the player has stopped playing
- *  - next: when moving the the next track
- *  - previous: when moving to the previous tracl
+ *  - stop:     when the player has stopped playing
+ *  - next:     when moving the the next track
+ *  - previous: when moving to the previous track
+ *  - loading:  when track is loaded
+ *  - end
+ *  - play
  */
 var Player = function(options){
   var context = new AudioContext(), // the AudioContext

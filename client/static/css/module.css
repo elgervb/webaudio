@@ -5,8 +5,11 @@
 .play,.play:hover{
 	background-image: url(img/play.png);
 }
-.pause,.pause:hover{
+.playing,.playing:hover{
 	background-image: url(img/pause.png);
+}
+.loading,.loading:hover{
+	background-image: url(img/loading.gif);
 }
 #stop{
 	background-image: url(img/stop.png);
