@@ -45,9 +45,10 @@ var playerApp = angular.module('player', [])
         $scope.progress.max = parseFloat(duration.toFixed(1));
         $scope.progress.value = parseFloat(elapsed.toFixed(1));        
         
+
         progressTimer = $interval(function(){
-          $scope.progress.value = (parseFloat($scope.progress.value) + .1).toFixed(1);
-        }, 100);
+          $scope.progress.value = (parseFloat($scope.progress.value) + .5).toFixed(1);
+        }, 500);
       })
     });
      $scope.$on('pause', function(event){
