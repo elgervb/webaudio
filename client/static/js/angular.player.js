@@ -9,7 +9,12 @@ var playerApp = angular.module('player', [])
     });
 
     $scope.play = function(){
-      player.play();
+      if ($scope.state === 'playing'){
+        player.pause();
+      }
+      else{
+        player.play();
+      }
     }
     $scope.stop = function(){
       player.stop();
@@ -28,6 +33,9 @@ var playerApp = angular.module('player', [])
       $scope.$apply(function(){
         $scope.state = "playing";
       })
+    });
+     $scope.$on('paused', function(event){
+      $scope.state = "pause";
     });
     $scope.$on('stop', function(event){
       $scope.state = "";

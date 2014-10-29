@@ -2,7 +2,7 @@
 	background-position: center center;
 	background-repeat: no-repeat;
 }
-.play,.play:hover{
+.play,.play:hover,.paused,.paused:hover{
 	background-image: url(img/play.png);
 }
 .playing,.playing:hover{
@@ -44,6 +44,7 @@ input[type='range'], input[type='range']::-moz-range-track{
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	background-color: #999;
+	cursor: pointer;
 	height: 1px;
 	vertical-align: middle;
 }
