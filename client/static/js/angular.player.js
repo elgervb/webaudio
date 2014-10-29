@@ -1,6 +1,6 @@
 var playerApp = angular.module('player', [])
 
-  .controller('ControlsController', ['$scope', '$timeout', 'player', function($scope, $timeout, player){
+  .controller('ControlsController', ['$scope', '$timeout', '$interval', 'player', function($scope, $timeout, $interval, player){
 
     var progressTimer;
     $scope.progress = {};
@@ -45,34 +45,35 @@ var playerApp = angular.module('player', [])
         $scope.progress.max = parseFloat(duration.toFixed(1));
         $scope.progress.value = parseFloat(elapsed.toFixed(1));        
         
-        progressTimer = setInterval(function(){
-          $timeout(function(){
-            $scope.progress.value = (parseFloat($scope.progress.value) + .1).toFixed(1);
-          });
+        progressTimer = $interval(function(){
+          $scope.progress.value = (parseFloat($scope.progress.value) + .1).toFixed(1);
         }, 100);
       })
     });
      $scope.$on('pause', function(event){
       $timeout(function(){
          $scope.state = "pause";
-         clearInterval(progressTimer);
+         $interval.cancel(progressTimer);
       })
     });
     $scope.$on('stop', function(event){
       $timeout(function(){
       $scope.state = "";
-       clearInterval(progressTimer);
+       $interval.cancel(progressTimer);
       })
     });
     $scope.$on('previous', function(event){
         $timeout(function(){
-        clearInterval(progressTimer);
+        $interval.cancel(progressTimer);
       })
     });
     $scope.$on('next', function(event){
         $timeout(function(){
-        clearInterval(progressTimer);
+        $interval.cancel(progressTimer);
       })
+    });
+    $scope.$on('$destroy', function() {
+      $interval.cancel(progressTimer);
     });
 
   }])
