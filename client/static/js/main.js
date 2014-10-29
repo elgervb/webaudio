@@ -12,7 +12,7 @@ var callbacks = {
       progress.max = parseFloat(duration.toFixed(1));
       progress.value = parseFloat(starttime.toFixed(1));
       progressTimer = setInterval(function(){
-      progress.value = parseFloat(progress.value) + .1;
+       progress.value = parseFloat(progress.value) + .1;
       }, 100);
     },
     stop : function(e){

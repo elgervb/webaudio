@@ -2,6 +2,10 @@ var playerApp = angular.module('player', [])
 
   .controller('ControlsController', ['$scope', '$timeout', 'player', function($scope, $timeout, player){
 
+    var progressTimer;
+    $scope.progress = {};
+    $scope.progress.max = 0;
+    $scope.progress.value = 0;
     // Gain
     $scope.gain = 80; // initial gain
     $scope.nowplaying = "";
@@ -34,20 +38,40 @@ var playerApp = angular.module('player', [])
         $scope.nowplaying = "loading " + track.path
       });
     });
-    $scope.$on('play', function(event, track){
+    $scope.$on('play', function(event, track, elapsed, duration){
       $timeout(function(){
         $scope.state = "playing";
         $scope.nowplaying = track.path
+        $scope.progress.max = parseFloat(duration.toFixed(1));
+        $scope.progress.value = parseFloat(elapsed.toFixed(1));        
+        
+        progressTimer = setInterval(function(){
+          $timeout(function(){
+            $scope.progress.value = (parseFloat($scope.progress.value) + .1).toFixed(1);
+          });
+        }, 100);
       })
     });
      $scope.$on('pause', function(event){
       $timeout(function(){
-       $scope.state = "pause";
-       })
+         $scope.state = "pause";
+         clearInterval(progressTimer);
+      })
     });
     $scope.$on('stop', function(event){
       $timeout(function(){
       $scope.state = "";
+       clearInterval(progressTimer);
+      })
+    });
+    $scope.$on('previous', function(event){
+        $timeout(function(){
+        clearInterval(progressTimer);
+      })
+    });
+    $scope.$on('next', function(event){
+        $timeout(function(){
+        clearInterval(progressTimer);
       })
     });
 
@@ -103,7 +127,7 @@ playerApp.factory('player', function($rootScope){
     $rootScope.$broadcast('loading', e.detail.track);
   }, false);
   player.addEventListener('play', function(e){
-    $rootScope.$broadcast('play', e.detail.track);
+    $rootScope.$broadcast('play', e.detail.track, e.detail.elapsed, e.detail.duration);
   }, false);
    player.addEventListener('pause', function(e){
     $rootScope.$broadcast('pause');
