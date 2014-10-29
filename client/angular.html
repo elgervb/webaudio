@@ -30,7 +30,7 @@
 			<output for="gain" id="gainDisplay">{{gain | number:0}}</output>
 
 			<div>
-				<p class="now-playing"></p>
+				<p class="now-playing">{{nowplaying}}</p>
 				<input type=range id="progress" min='0.0' value='0.0' max='1.0' step='0.1' disabled="">
 			</div>
 		</header>
@@ -53,7 +53,7 @@
 			<!-- Library -->
 			<div class="rightpanel col-50" ng-controller="LibraryController">
 				<ul id="library">
-					<li ng-repeat="track in tracks  | filter:filter" ng-click="addToPlaylist(track)">
+					<li ng-repeat="track in tracks | filter:filter" ng-click="addToPlaylist(track)">
 					{{track.path}}
 					</li>
 				</ul>

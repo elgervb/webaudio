@@ -95,7 +95,7 @@ var Player = function(options){
         return;
       }
       state = 'loading';
-      target.dispatchEvent(createEvent('loading'));
+      target.dispatchEvent(createEvent('loading', {track: playlist.current() } ));
       log('start loading...', playlist.current().path);
       new Loader( encodeURIComponents( '../server/stream/'+ playlist.current().path ) )
       .then(function(buffer, url){

@@ -4,6 +4,7 @@ var playerApp = angular.module('player', [])
 
     // Gain
     $scope.gain = 80; // initial gain
+    $scope.nowplaying = "";
     $scope.$watch('gain', function( value ){
       player.gain( parseFloat(value) )
     });
@@ -27,14 +28,16 @@ var playerApp = angular.module('player', [])
     }
 
     // event handling. Use $timeout because of timing issues with $scope.$apply
-    $scope.$on('loading', function(event){
+    $scope.$on('loading', function(event, track){
       $timeout(function(){
         $scope.state = "loading";
+        $scope.nowplaying = "loading " + track.path
       });
     });
-    $scope.$on('play', function(event){
+    $scope.$on('play', function(event, track){
       $timeout(function(){
         $scope.state = "playing";
+        $scope.nowplaying = track.path
       })
     });
      $scope.$on('pause', function(event){
@@ -77,7 +80,8 @@ var playerApp = angular.module('player', [])
     $scope.tracks = [];
 
     $scope.play = function(track){
-      player.play(track);
+      player.playlist().goto(track.guid);
+      player.play();
     }
 
     $scope.$on('addToPlayList', function(event, track){
@@ -95,13 +99,13 @@ var playerApp = angular.module('player', [])
 playerApp.factory('player', function($rootScope){
   var player =  new Player({debug: true});
 
-  player.addEventListener('loading', function(){
-    $rootScope.$broadcast('loading');
+  player.addEventListener('loading', function(e){
+    $rootScope.$broadcast('loading', e.detail.track);
   }, false);
-  player.addEventListener('play', function(){
-    $rootScope.$broadcast('play');
+  player.addEventListener('play', function(e){
+    $rootScope.$broadcast('play', e.detail.track);
   }, false);
-   player.addEventListener('pause', function(){
+   player.addEventListener('pause', function(e){
     $rootScope.$broadcast('pause');
   }, false);
   player.addEventListener('stop', function(){
