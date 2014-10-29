@@ -1,6 +1,6 @@
 var playerApp = angular.module('player', [])
 
-  .controller('ControlsController', ['$scope', 'player', function($scope, player){
+  .controller('ControlsController', ['$scope', '$timeout', 'player', function($scope, $timeout, player){
 
     // Gain
     $scope.gain = 80; // initial gain
@@ -26,19 +26,26 @@ var playerApp = angular.module('player', [])
       player.next();
     }
 
+    // event handling. Use $timeout because of timing issues with $scope.$apply
     $scope.$on('loading', function(event){
+      $timeout(function(){
         $scope.state = "loading";
+      });
     });
     $scope.$on('play', function(event){
-      $scope.$apply(function(){
+      $timeout(function(){
         $scope.state = "playing";
       })
     });
-     $scope.$on('paused', function(event){
-      $scope.state = "pause";
+     $scope.$on('pause', function(event){
+      $timeout(function(){
+       $scope.state = "pause";
+       })
     });
     $scope.$on('stop', function(event){
+      $timeout(function(){
       $scope.state = "";
+      })
     });
 
   }])
@@ -93,6 +100,9 @@ playerApp.factory('player', function($rootScope){
   }, false);
   player.addEventListener('play', function(){
     $rootScope.$broadcast('play');
+  }, false);
+   player.addEventListener('pause', function(){
+    $rootScope.$broadcast('pause');
   }, false);
   player.addEventListener('stop', function(){
     $rootScope.$broadcast('stop');
