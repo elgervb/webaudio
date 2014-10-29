@@ -9,6 +9,7 @@
  *  - loading:  when track is loaded
  *  - end
  *  - play
+ *  - pause
  */
 var Player = function(options){
   var context = new AudioContext(), // the AudioContext
