@@ -44,8 +44,10 @@ var playerApp = angular.module('player', [])
         $scope.nowplaying = track.path
         $scope.progress.max = parseFloat(duration.toFixed(1));
         $scope.progress.value = parseFloat(elapsed.toFixed(1));        
-        
 
+        if (progressTimer){
+          $interval.cancel(progressTimer);
+        }
         progressTimer = $interval(function(){
           $scope.progress.value = (parseFloat($scope.progress.value) + .5).toFixed(1);
         }, 500);
