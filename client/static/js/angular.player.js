@@ -96,7 +96,6 @@ var playerApp = angular.module('player', [])
     }
 
     $scope.addToPlaylist = function(track){
-      console.log('send add to playlist');
       $rootScope.$broadcast('addToPlayList', track);
     }
 
@@ -112,7 +111,6 @@ var playerApp = angular.module('player', [])
     }
 
     $scope.$on('addToPlayList', function(event, track){
-      console.log('receive add to playlist ' + track.path);
       player.playlist().add(track);
       $scope.tracks.push(track);
     });
