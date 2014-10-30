@@ -13,7 +13,7 @@
 		<!-- Controls -->
 		<header class="top clearfix" ng-controller="ControlsController">
 			<div class="wrap-btn small">
-				<button id="previous" class="btn-circle" ng-click="previous()"></button>
+				<button id="previous" class="btn-circle" ng-click="previous()" ng-disabled="!hasPrevious()"></button>
 			</div>
 			<div class="wrap-btn">
 				<button id="stop" class="btn-circle" ng-click="stop()"></button>
@@ -22,7 +22,7 @@
 				<button id="play" class="btn-circle play {{state}}" ng-click="play()"></button>
 			</div>
 			<div class="wrap-btn small">
-				<button id="next" class="btn-circle" ng-click="next()"></button>
+				<button id="next" class="btn-circle" ng-click="next()" ng-disabled="!hasNext()"></button>
 			</div>
 
 			<label for=gain>Volume</label>

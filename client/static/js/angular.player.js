@@ -30,6 +30,12 @@ var playerApp = angular.module('player', [])
     $scope.next = function(){
       player.next();
     }
+    $scope.hasNext = function(){
+      return player.playlist().peek(1);
+    }
+     $scope.hasPrevious = function(){
+      return player.playlist().peek(-1);
+    }
 
     // event handling. Use $timeout because of timing issues with $scope.$apply
     $scope.$on('loading', function(event, track){

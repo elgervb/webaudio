@@ -264,6 +264,15 @@ var Playlist = function(items){
     }
     return null;
   },
+  peek = function(relIndex){
+    var peek = index + relIndex;
+    if (peek >= 0){
+      if (songs[peek]){
+        return true
+      }
+    }
+    return false;
+  }
   previous = function(){
     if (index > 0 ){
       return songs[--index]
@@ -291,6 +300,7 @@ var Playlist = function(items){
     getNext : getNext,
     goto : goto,
     next  : next,
+    peek  : peek,
     previous : previous,
     remove : remove,
     reset : reset,
