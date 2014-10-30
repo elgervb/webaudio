@@ -81,26 +81,40 @@ var playerApp = angular.module('player', [])
 
   .controller('LibraryController', ['$scope', '$rootScope', 'player', function($scope, $rootScope, player){
 
-    // Get library from server
-    if (localStorage.length == 0 || !localStorage.getItem('local.library')){
-      new Loader('../server/', 'json')
-        .then(function(tracks){
-          localStorage.setItem('local.library', JSON.stringify(tracks) );
-          $scope.$apply(function(){
-            $scope.tracks = tracks;
-          });
-        });
-    }
-    else{
-      $scope.tracks = JSON.parse(localStorage.getItem('local.library'));
-    }
-
     $scope.addToPlaylist = function(track){
       $rootScope.$broadcast('addToPlayList', track);
     }
 
+    $scope.loadLibrary = function(){
+      // Get library from server
+      if (localStorage.length == 0 || !localStorage.getItem('local.library')){
+        new Loader('../server/', 'json')
+          .then(function(tracks){
+            localStorage.setItem('local.library', JSON.stringify(tracks) );
+            $scope.$apply(function(){
+              $scope.tracks = tracks;
+            });
+          });
+      }
+      else{
+        $scope.tracks = JSON.parse(localStorage.getItem('local.library'));
+      }
+    };
+    $scope.reloadLibrary = function(){
+      localStorage.removeItem('local.library');
+
+      $scope.loadLibrary();
+    };
+
+    
+    $scope.loadLibrary();
   }])
 
+  /**
+   * Controller for the playlist
+   *
+   * TODO find a way to use the playlist object of player to map the tracks to. Now we use $scope.tracks, that means we have a double administration
+   */
   .controller('PlaylistController', ['$scope', '$rootScope', 'player', function($scope, $rootScope, player){
 
     $scope.tracks = [];
@@ -108,6 +122,10 @@ var playerApp = angular.module('player', [])
     $scope.play = function(track){
       player.playlist().goto(track.guid);
       player.play();
+    };
+    $scope.clear = function(){
+      player.playlist().clear();
+      $scope.tracks = [];
     }
 
     $scope.$on('addToPlayList', function(event, track){
