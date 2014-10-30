@@ -126,8 +126,10 @@ var playerApp = angular.module('player', [])
     $scope.tracks = [];
 
     $scope.play = function(track){
-      player.playlist().goto(track.guid);
-      player.play();
+      if (player.state() !== 'loading'){
+        player.playlist().goto(track.guid);
+        player.play();
+      }
     };
     $scope.clear = function(){
       player.playlist().clear();

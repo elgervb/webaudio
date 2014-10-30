@@ -200,7 +200,8 @@ var Player = function(options){
     playlist            : function(){return playlist;},
     previous            : previous,
     stop                : stop,
-    gain                : gain
+    gain                : gain,
+    state               : function(){return state;}
   }
 };
 
