@@ -81,13 +81,14 @@ var playerApp = angular.module('player', [])
 
   .controller('LibraryController', ['$scope', '$rootScope', 'player', function($scope, $rootScope, player){
 
-    $scope.filter = 'muse';
     // Get library from server
     if (localStorage.length == 0 || !localStorage.getItem('local.library')){
       new Loader('../server/', 'json')
         .then(function(tracks){
           localStorage.setItem('local.library', JSON.stringify(tracks) );
-          $scope.tracks = tracks;
+          $scope.$apply(function(){
+            $scope.tracks = tracks;
+          });
         });
     }
     else{

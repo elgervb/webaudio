@@ -213,7 +213,7 @@ var Loader = function (url, responsetype) {
 
     request.onload = function(){
       if (request.status == 200) {
-        console.log( "Loading took " + (new Date().getTime() - beginTime) / 1000 + 'ms' );
+        console.log( "Loading new library took " + (new Date().getTime() - beginTime) / 1000 + 'ms' );
         resolve(request.response, url);
       }
       else{
