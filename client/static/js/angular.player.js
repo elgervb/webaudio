@@ -180,3 +180,13 @@ playerApp.factory('player', function($rootScope){
 
   return player;
 });
+
+playerApp.filter('track', function() {
+  return function(track) {
+    if (track.artist && track.album){
+      return track.track + " " +track.artist + " - " + track.album + " - " + track.title;
+    } else {
+      return track.path + " (" + track.id3 + ")";
+    }
+  };
+});

@@ -42,7 +42,7 @@
 
 				<ul id="playlist">
 					<li ng-repeat="track in tracks track by $index" ng-click="play(track)">
-					{{track.path}}
+					{{track | track}}
 					</li>
 				</ul>
 				<div class="settings">
@@ -55,7 +55,7 @@
 			<div class="rightpanel col-50" ng-class="{loading: loading}" ng-controller="LibraryController">
 				<ul id="library">
 					<li ng-repeat="track in tracks | filter:filter" ng-click="addToPlaylist(track)">
-					{{track.path}}
+					{{track | track}}
 					</li>
 				</ul>
 				<div class="settings">
