@@ -141,6 +141,12 @@ var playerApp = angular.module('player', [])
       player.playlist().clear();
       $scope.tracks = [];
     }
+    $scope.nowplaying = function(track){
+      if (player.playlist().current().guid === track.guid){
+        return true;
+      }
+      return false;
+    }
 
     $scope.$on('addToPlayList', function(event, track){
       player.playlist().add(track);
