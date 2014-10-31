@@ -1,6 +1,8 @@
 /**
  * Audio player for the web, using the HTML5 audio API
  *
+ * Options:
+ *  - debug boolean whether or not to log debug statements
  * 
  * Events:
  *  - stop:     when the player has stopped playing
@@ -21,7 +23,9 @@ var Player = function(options){
     gainNode = context.createGain(),// The master volume
     options  = options || {},
     state = 'idle',                 // the state of the player idle, pause, playing, loading ()
-    nowPlaying
+    nowPlaying,
+    preloading = false,
+    preloadBuffer,
   /**
    * Event target for even handling
    */
@@ -95,9 +99,19 @@ var Player = function(options){
         return;
       }
       state = 'loading';
-      target.dispatchEvent(createEvent('loading', {track: playlist.current() } ));
-      log('start loading...', playlist.current().path);
-      new Loader( encodeURIComponents( '../server/stream/'+ playlist.current().path ) )
+
+      var track = playlist.current();
+      if (!preloading && preloadBuffer){
+        audioBuffer = preloadBuffer;
+        preloadBuffer = null;
+        nowPlaying = track;
+        startPlaying();
+        return;
+      }
+      
+      target.dispatchEvent(createEvent('loading', {track: track } ));
+      log('start loading...', track.path);
+      new Loader( encodeURIComponents( '../server/stream/'+ track.path ) )
       .then(function(buffer, url){
         state = 'loading';
         log(state+' '+playlist.current().path);
@@ -108,7 +122,7 @@ var Player = function(options){
           audioBuffer = buffer;
           log("Start playing. Duration: "+ audioBuffer.duration);
           clear();
-          nowPlaying = playlist.current();
+          nowPlaying = track;
           startPlaying();
         }, function(){
          log('Error encoding file ');
@@ -130,6 +144,31 @@ var Player = function(options){
       play();
     }
   },
+  preloadNext = function(){
+    var nextTrack = playlist.peek(1) ;
+    if (!nextTrack){return;}
+    target.dispatchEvent(createEvent('preloading', {track: nextTrack } ));
+    log('Start preloading...', nextTrack.path);
+    preloading = true;
+    new Loader( encodeURIComponents( '../server/stream/'+ nextTrack.path ) )
+    .then(function(buffer, url){
+      log('Finished preloading ' + nextTrack.path);
+      log('reading...');
+      var beginTime = new Date().getTime();
+      context.decodeAudioData(buffer, function(buffer) {
+        log( "Reading took " + (new Date().getTime() - beginTime) / 1000 + 'ms' );
+        preloadBuffer = buffer;
+        preloading = false;
+      }, function(){
+       log('Error encoding file ');
+       preloading = false;
+      });
+    })
+    .catch(function(error){
+      log('error loading while preloading '+ error.status +'-'+ error.message);
+      preloading = false;
+    });
+  }
   startPlaying = function(){
     source = context.createBufferSource();
     source.buffer = audioBuffer;
@@ -161,6 +200,8 @@ var Player = function(options){
         'track': nowPlaying
       })
     );
+
+    preloadNext();
   },
   previous = function(){
     log("previous");
@@ -268,7 +309,7 @@ var Playlist = function(items){
     var peek = index + relIndex;
     if (peek >= 0){
       if (songs[peek]){
-        return true
+        return songs[peek]
       }
     }
     return false;

@@ -184,7 +184,7 @@ playerApp.factory('player', function($rootScope){
 playerApp.filter('track', function() {
   return function(track) {
     if (track.artist && track.album){
-      return track.track + " " +track.artist + " - " + track.album + " - " + track.title;
+      return track.artist + " - " + track.album + " - " + track.track + " "  + track.title;
     } else {
       return track.path + " (" + track.id3 + ")";
     }
