@@ -196,7 +196,7 @@ playerApp.filter('duration', function() {
     if (!d){
       return;
     }
-    var s = d % 60;
+    var s = parseInt(d % 60);
     var m = parseInt(d/60)%60;
     var h = parseInt(d/3600)%60;
     return (h?h+":":"")+(m<10&&h>0?"0"+m:m)+ ":" + (s<10?"0"+s:s)
