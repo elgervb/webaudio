@@ -41,7 +41,7 @@
 			<div class="leftpanel col-50" ng-controller="PlaylistController">
 
 				<ul id="playlist">
-					<li ng-repeat="track in tracks track by $index" ng-click="play(track)">
+					<li ng-repeat="track in tracks track by $index" ng-click="play(track)" ng-class="{current: nowplaying(track)}">
 					{{track | track}}
 					</li>
 				</ul>
