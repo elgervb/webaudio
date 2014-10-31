@@ -8,7 +8,7 @@ var playerApp = angular.module('player', [])
     $scope.progress.value = 0;
     // Gain
     $scope.gain = 80; // initial gain
-    $scope.nowplaying = "";
+    $scope.nowplaying = null;
     $scope.$watch('gain', function( value ){
       player.gain( parseFloat(value) )
     });
@@ -41,13 +41,13 @@ var playerApp = angular.module('player', [])
     $scope.$on('loading', function(event, track){
       $timeout(function(){
         $scope.state = "loading";
-        $scope.nowplaying = "loading " + track.path
+        $scope.nowplaying = track
       });
     });
     $scope.$on('play', function(event, track, elapsed, duration){
       $timeout(function(){
         $scope.state = "playing";
-        $scope.nowplaying = track.path
+        $scope.nowplaying = track
         $scope.progress.max = parseFloat(duration.toFixed(1));
         $scope.progress.value = parseFloat(elapsed.toFixed(1));       
 
@@ -183,6 +183,9 @@ playerApp.factory('player', function($rootScope){
 
 playerApp.filter('track', function() {
   return function(track) {
+    if(!track){
+      return "";
+    }
     if (track.artist && track.album){
       return track.artist + " - " + track.album + " - " + track.track + " "  + track.title;
     } else {

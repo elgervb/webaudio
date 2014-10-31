@@ -29,7 +29,9 @@ class IndexController implements IController
 	public function indexAction()
 	{
 		$repository = \AppContext::get()->getRepository();
-		return new Json($repository->search());
+		$sc = $repository->createSearchCriteria();
+		$sc->orderBy("artist, album, title, track");
+		return new Json($repository->search($sc));
 	}
 	
 	public function testAction(){
