@@ -30,7 +30,7 @@
 			<output for="gain" id="gainDisplay">{{gain | number:0}}</output>
 
 			<div>
-				<p class="now-playing">{{nowplaying}}</p>
+				<p class="now-playing">{{nowplaying}} {{progress.max | duration}} </p>
 				<input type=range id="progress" min='0.0' ng-model='progress.value' max='{{progress.max}}' step='0.1' disabled="">
 			</div>
 		</header>

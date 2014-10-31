@@ -13,5 +13,6 @@ CREATE TABLE "files" (
     "genre" TEXT,
     "title" TEXT,
     "year" INTEGER,
-    "track" INTEGER
+    "track" INTEGER,
+    "length" INTEGER
 );

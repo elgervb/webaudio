@@ -76,6 +76,7 @@ class IndexController implements IController
 				$model->{'title'} = $tags->{'title'};
 				$model->{'year'} = $tags->{'year'};
 				$model->{'track'} = $tags->{'track'};
+				$model->{'length'} = $tags->{'length'};
 			}catch(Id3Exception $ex){
 				//
 			}

@@ -49,7 +49,7 @@ var playerApp = angular.module('player', [])
         $scope.state = "playing";
         $scope.nowplaying = track.path
         $scope.progress.max = parseFloat(duration.toFixed(1));
-        $scope.progress.value = parseFloat(elapsed.toFixed(1));        
+        $scope.progress.value = parseFloat(elapsed.toFixed(1));       
 
         if (progressTimer){
           $interval.cancel(progressTimer);
@@ -188,5 +188,17 @@ playerApp.filter('track', function() {
     } else {
       return track.path + " (" + track.id3 + ")";
     }
+  };
+});
+
+playerApp.filter('duration', function() {
+  return function(d) {
+    if (!d){
+      return;
+    }
+    var s = d % 60;
+    var m = parseInt(d/60)%60;
+    var h = parseInt(d/3600)%60;
+    return (h?h+":":"")+(m<10&&h>0?"0"+m:m)+ ":" + (s<10?"0"+s:s)
   };
 });
