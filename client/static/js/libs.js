@@ -135,7 +135,6 @@ var Player = function(options){
       });
     }
     else if (state === 'paused'){
-      //log("resume elapsed: "+ elapsedTime +' duration '+ audioBuffer.duration);
       startPlaying();
     }
     else{
@@ -200,8 +199,9 @@ var Player = function(options){
         'track': nowPlaying
       })
     );
-
-    preloadNext();
+    if (!preloadBuffer){
+      preloadNext();
+    }
   },
   previous = function(){
     log("previous");
