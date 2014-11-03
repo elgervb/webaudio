@@ -28,6 +28,7 @@ class IndexController implements IController
 	 */
 	public function indexAction()
 	{
+		set_time_limit(60);
 		$repository = \AppContext::get()->getRepository();
 		$sc = $repository->createSearchCriteria();
 		$sc->orderBy("artist, album, title, track");
