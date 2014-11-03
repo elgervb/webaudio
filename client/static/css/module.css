@@ -113,6 +113,9 @@ header.top {
 .clear-playlist{
 	background: transparent url(img/clear.png) no-repeat center center;
 }
+.reload-library{
+	background: transparent url(img/refresh.png) no-repeat center center;
+}
 #filter{
 	background: rgba(255, 255, 255, 0.8);
 	border: none;

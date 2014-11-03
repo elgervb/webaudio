@@ -93,7 +93,7 @@ var playerApp = angular.module('player', [])
       $rootScope.$broadcast('addToPlayList', track);
     }
 
-    $scope.loadLibrary = function(){
+    $scope.load = function(){
       $scope.loading = true;
       // Get library from server
       if (localStorage.length == 0 || !localStorage.getItem('local.library')){
@@ -112,14 +112,14 @@ var playerApp = angular.module('player', [])
       }
 
     };
-    $scope.reloadLibrary = function(){
+    $scope.reload = function(){
       localStorage.removeItem('local.library');
-
-      $scope.loadLibrary();
+      $scope.tracks = "";
+      $scope.load();
     };
 
     
-    $scope.loadLibrary();
+    $scope.load();
   }])
 
   /**

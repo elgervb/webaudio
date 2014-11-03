@@ -101,11 +101,11 @@ var Player = function(options){
       state = 'loading';
 
       var track = playlist.current();
-      if (!preloading && preloadBuffer){
+      if (!preloading && preloadBuffer){ // yes, we've preloaded next track
         audioBuffer = preloadBuffer;
         preloadBuffer = null;
-        nowPlaying = track;
-        startPlaying();
+        clear();
+        startPlaying(track);
         return;
       }
       
@@ -122,8 +122,7 @@ var Player = function(options){
           audioBuffer = buffer;
           log("Start playing. Duration: "+ audioBuffer.duration);
           clear();
-          nowPlaying = track;
-          startPlaying();
+          startPlaying(track);
         }, function(){
          log('Error encoding file ');
          stop(); // try to fix loading issue
@@ -168,7 +167,8 @@ var Player = function(options){
       preloading = false;
     });
   }
-  startPlaying = function(){
+  startPlaying = function(track){
+    nowPlaying = track;
     source = context.createBufferSource();
     source.buffer = audioBuffer;
     source.connect(gainNode);
@@ -179,11 +179,10 @@ var Player = function(options){
       log(state +' elapsed: '+ elapsedTime +' duration: '+audioBuffer.duration );
       // this is also called when pausing
       if ( startTime > 0 && audioBuffer.duration <= elapsedTime){
-        if (source){source.stop(0);}
+        clear();
         log("song ended");
         target.dispatchEvent( createEvent('end') );
         next();
-        elapsedTime = startTime = 0;
       }
     }
     
