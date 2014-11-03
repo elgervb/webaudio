@@ -147,13 +147,22 @@ var playerApp = angular.module('player', [])
       }
       return false;
     }
+    $scope.save = function(){
+      localStorage.setItem('local.playlist', JSON.stringify( $scope.tracks ) ); 
+    };
 
     $scope.$on('addToPlayList', function(event, track){
       player.playlist().add(track);
       $scope.tracks.push(track);
     });
 
+    if (localStorage.length && localStorage.getItem('local.playlist')){
+      $scope.tracks = JSON.parse( localStorage.getItem('local.playlist') );
 
+      $scope.tracks.forEach(function(track){
+        player.playlist().add(track);
+      });
+    }
   }]);
 
 /**

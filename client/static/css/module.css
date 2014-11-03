@@ -116,6 +116,9 @@ header.top {
 .reload-library{
 	background: transparent url(img/refresh.png) no-repeat center center;
 }
+.save-playlist{
+	background: transparent url(img/save.png) no-repeat center center;
+}
 #filter{
 	background: rgba(255, 255, 255, 0.8);
 	border: none;
