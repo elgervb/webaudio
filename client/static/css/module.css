@@ -107,6 +107,9 @@ header.top {
 .settings .action:hover{
 	opacity: .8;
 }
+#playlist, #library{
+	padding-bottom: 50px;
+}
 #playlist .current{
 	background-color: #E4E4E4;
 }
