@@ -9,8 +9,8 @@
  *  - next:     when moving the the next track
  *  - previous: when moving to the previous track
  *  - loading:  when track is loaded
- *  - end
- *  - play
+ *  - end:      when finished playing a song
+ *  - play:     when starting playing a song
  *  - pause
  */
 var Player = function(options){

@@ -168,7 +168,7 @@ var playerApp = angular.module('player', [])
 /**
  * Values & factories
  */
-playerApp.factory('player', function($rootScope){
+playerApp.factory('player', function($rootScope, $filter){
   var player =  new Player({debug: true});
 
   player.addEventListener('loading', function(e){
@@ -192,6 +192,32 @@ playerApp.factory('player', function($rootScope){
   player.addEventListener('previous', function(){
     $rootScope.$broadcast('previous');
   }, false);
+
+  /*
+   * Extensions
+   */
+
+   // Notifications
+    player.addEventListener('play', function(e){
+      function content(){
+        console.dir(e);
+        return "Now playing " + $filter('track')(e.detail.track) + "(" + $filter('duration')(e.detail.elapsed||0) + " of " + $filter('duration')(e.detail.duration) + ")";
+      }
+      if ("Notification" in window) {
+        if (Notification.permission === "granted") {
+          // If it's okay let's create a notification
+          var notification = new Notification(content());
+        }
+        else if (Notification.permission !== 'denied') {
+          Notification.requestPermission(function (permission) {
+            // If the user is okay, let's create a notification
+            if (permission === "granted") {
+              var notification = new Notification(content());
+            }
+          });
+        }
+      }
+    }, false);
 
   return player;
 });
@@ -217,6 +243,8 @@ playerApp.filter('duration', function() {
     var s = parseInt(d % 60);
     var m = parseInt(d/60)%60;
     var h = parseInt(d/3600)%60;
-    return (h?h+":":"")+(m<10&&h>0?"0"+m:m)+ ":" + (s<10?"0"+s:s)
+    return (h?h+":":"")+(m<10&&h>0?"0"+m:m)+ ":" + (s<10?"0"+s:s) || 0;
   };
 });
+
+
