@@ -26,6 +26,7 @@ var Player = function(options){
     nowPlaying,
     preloading = false,
     preloadBuffer,
+    preloadTimer,
   /**
    * Event target for even handling
    */
@@ -200,7 +201,15 @@ var Player = function(options){
       })
     );
     if (!preloadBuffer){
-      preloadNext();
+      if (preloadTimer){
+        clearTimeout(preloadTimer);
+      }
+      /* 
+       * preload 20 seconds before time of current playing is running out..
+       * When current track is shorter then 20 seconds, then reload now (100ms)
+       */
+      setTimeout(preloadNext, Math.max((audioBuffer.duration-20)*1000,100) );
+      console.log("Next preload in " + Math.max((audioBuffer.duration-elapsedTime-20)*1000,100) + " ms");
     }
   },
   previous = function(){
