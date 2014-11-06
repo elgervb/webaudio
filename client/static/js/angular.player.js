@@ -196,32 +196,19 @@ playerApp.factory('player', function($rootScope, $filter){
   /*
    * Extensions
    */
-
    // Notifications
     player.addEventListener('play', function(e){
-      function content(){
-        console.dir(e);
-        return "Now playing " + $filter('track')(e.detail.track) + "(" + $filter('duration')(e.detail.elapsed||0) + " of " + $filter('duration')(e.detail.duration) + ")";
-      }
-      if ("Notification" in window) {
-        if (Notification.permission === "granted") {
-          // If it's okay let's create a notification
-          var notification = new Notification(content());
-        }
-        else if (Notification.permission !== 'denied') {
-          Notification.requestPermission(function (permission) {
-            // If the user is okay, let's create a notification
-            if (permission === "granted") {
-              var notification = new Notification(content());
-            }
-          });
-        }
-      }
+      var msg = "Now playing " + $filter('track')(e.detail.track) + "(" + $filter('duration')(e.detail.elapsed||0) + " of " + $filter('duration')(e.detail.duration) + ")";
+      plugins.notifications(msg);
     }, false);
 
   return player;
 });
 
+
+/*
+ * Filters
+ */
 playerApp.filter('track', function() {
   return function(track) {
     if(!track){
@@ -238,7 +225,7 @@ playerApp.filter('track', function() {
 playerApp.filter('duration', function() {
   return function(d) {
     if (!d){
-      return;
+      return "0:00";
     }
     var s = parseInt(d % 60);
     var m = parseInt(d/60)%60;
@@ -248,3 +235,49 @@ playerApp.filter('duration', function() {
 });
 
 
+var plugins = {
+  /**
+   * Show a notification when the next song is played when the player is not visible
+   */
+  notifications: function(message){
+    var notification, hidden, visible, visibilityChange;
+
+    // first, do some prefix checking
+    if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support 
+      hidden = "hidden";
+      visible = "visible";
+      visibilityChange = "visibilitychange";
+    } else if (typeof document.mozHidden !== "undefined") {
+      hidden = "mozHidden";
+      visible = "mozVisible";
+      visibilityChange = "mozvisibilitychange";
+    } else if (typeof document.msHidden !== "undefined") {
+      hidden = "msHidden";
+      visible = "msVisible";
+      visibilityChange = "msvisibilitychange";
+    } else if (typeof document.webkitHidden !== "undefined") {
+      hidden = "webkitHidden";
+      visible = "webkitVisible";
+      visibilityChange = "webkitvisibilitychange";
+    }
+
+    if (document.visibilityState === hidden){
+      // do the notificaton
+      if ("Notification" in window) { // check for support
+        if (Notification.permission === "granted") {
+          // If it's okay let's create a notification
+          notification = new Notification(message);
+        }
+        else if (Notification.permission !== 'denied') {
+          Notification.requestPermission(function (permission) {
+            // If the user is okay, let's create a notification
+            if (permission === "granted") {
+              notification = new Notification(message);
+            }
+          });
+        }
+      }
+    }
+   
+  }
+};

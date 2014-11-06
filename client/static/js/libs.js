@@ -87,6 +87,7 @@ var Player = function(options){
    * @param callback executed when playing with params starttime, duration
    */
   play = function() {
+    var track = playlist.current();
     // load new audio fragment
     if(!source){
       if (state === 'loading'){
@@ -100,7 +101,7 @@ var Player = function(options){
       }
       state = 'loading';
 
-      var track = playlist.current();
+      
       if (!preloading && preloadBuffer){ // yes, we've preloaded next track
         audioBuffer = preloadBuffer;
         preloadBuffer = null;
@@ -134,7 +135,7 @@ var Player = function(options){
       });
     }
     else if (state === 'paused'){
-      startPlaying();
+      startPlaying(track);
     }
     else{
       // Uhm, are we trying to play a new song while already playing another?
