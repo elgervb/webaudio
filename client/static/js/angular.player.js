@@ -140,6 +140,8 @@ var playerApp = angular.module('player', [])
     $scope.clear = function(){
       player.playlist().clear();
       $scope.tracks = [];
+      // clear cache
+      localStorage.setItem('local.playlist', JSON.stringify( $scope.tracks ) );
     }
     $scope.nowplaying = function(track){
       if (player.playlist().current().guid === track.guid){
