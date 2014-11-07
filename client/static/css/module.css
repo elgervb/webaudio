@@ -96,16 +96,19 @@ header.top {
 	width: 100%;
 }
 .settings .action{
+	background-size: 16px;
 	display: inline-block;
-	height: 32px;
-	opacity: .2;
+	opacity: .1;
 	text-overflow: hidden;
 	text-indent: -99999px;
-	transition: all .3s ease-in 0s;
+	transition: all .2s ease-in 0s;
 	width: 32px;
 }
+.settings:hover .action{
+	opacity: .5;
+}
 .settings .action:hover{
-	opacity: .8;
+	opacity: 1;
 }
 #playlist, #library{
 	padding-bottom: 50px;
@@ -126,10 +129,12 @@ header.top {
 	background: rgba(255, 255, 255, 0.8);
 	border: none;
 	border-bottom: 1px solid #999999;
-	color: #999999;
 	font-family: "Open Sans";
-	font-size: 1.2em;
 	font-weight: lighter;
+	opacity: .5;
+}
+#filter:hover, #filter:focus{
+	opacity: 1;
 }
 .hide{
 	display: none;
