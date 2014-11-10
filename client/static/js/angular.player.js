@@ -152,6 +152,9 @@ var playerApp = angular.module('player', [])
     $scope.save = function(){
       localStorage.setItem('local.playlist', JSON.stringify( $scope.tracks ) ); 
     };
+    $scope.shuffle = function(){
+      $scope.tracks =  player.playlist().shuffle();
+    };
 
     $scope.$on('addToPlayList', function(event, track){
       player.playlist().add(track);
