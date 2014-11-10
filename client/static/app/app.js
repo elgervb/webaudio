@@ -1,0 +1,1 @@
+var playerApp = angular.module('player', [])
