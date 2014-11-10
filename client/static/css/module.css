@@ -41,7 +41,6 @@
 	padding-bottom: 0;
 }
 
-
 input[type='range'], input[type='range']::-moz-range-track{
 	-webkit-appearance: none;
 	-moz-appearance: none;
@@ -70,17 +69,16 @@ input[type='range']::-webkit-slider-thumb, input[type='range']::-moz-range-thumb
 
 header.top {
 	background: rgba(255, 255, 255, 0.75);
-    position: fixed;
-    text-align: center;	
-    transition: all 0.2s ease 0s;
-    width: 100%;
-    z-index: 100;
+  position: fixed;
+  text-align: center;	
+  transition: all 0.2s ease 0s;
+  width: 100%;
+  z-index: 100;
 }
 
 .leftpanel, .rightpanel{
   height: 100%;
   overflow: auto;
-  position: relative;
   z-index: 3;
 }
 
