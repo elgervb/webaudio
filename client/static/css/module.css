@@ -180,3 +180,9 @@ header.top {
 	background-color: #22AA24;
 	height: 100%;
 }
+.progress-bar .progress.medium{	
+	background-color: #E07C11;
+}
+.progress-bar .progress.high{	
+	background-color: #CC381E;
+}

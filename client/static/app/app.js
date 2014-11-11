@@ -30,13 +30,28 @@ var playerApp = angular.module('player', ['ngRoute'])
     restrict: 'E',
     scope: {
       progress: '=',
-      delay: '='
+      delay: '=',
+      low: '=?',
+      medium:'=?',
+      high:'=?'
     },
-    template: '<div class="progress-bar"><div class="progress" style="width:{{progress}}%"></div></div>',
-    link: function(scope, element, attrs) {
-      console.dir(element);
+    template: '<div class="progress-bar"><div class="progress {{cssclass}}" style="width:{{progress}}%"></div></div>',
+    link: function($scope, element, attrs) {
+      $scope.low = $scope.low || 50;
+      $scope.medium = $scope.medium || 75;
+      $scope.high = $scope.high || 95;
 
-      element.css('width', scope.progress);
+      if ($scope.progress < $scope.low){
+        $scope.cssclass = 'low';
+      }
+      else if($scope.progress < $scope.medium){
+       $scope.cssclass = 'medium';
+      }
+      else{
+        $scope.cssclass = 'high';
+      }
+
+      element.css('width', $scope.progress);
     }
   };
 }]);
