@@ -3,11 +3,16 @@ var playerApp = angular.module('player', ['ngRoute'])
 .config(function($routeProvider, $locationProvider) {
  
   $routeProvider
-   .when('/', {
+  .when('/', {
     templateUrl: 'static/app/views/playerView.html'
   })
-   .when('/settings', {
+  .when('/settings', {
     templateUrl: 'static/app/views/settingsView.html'
-   });
+   })
+  .when('/player', {
+    redirectTo: '/'
+  });
+
+   $locationProvider.html5Mode('true');
 
 }); // end config
