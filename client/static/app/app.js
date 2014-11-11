@@ -13,7 +13,8 @@ var playerApp = angular.module('player', ['ngRoute'])
     templateUrl: 'static/app/views/playerView.html'
   })
   .when('/settings', {
-    templateUrl: 'static/app/views/settingsView.html'
+    templateUrl: 'static/app/views/settingsView.html',
+    controller: 'settingsController'
    })
   .when('/player', {
     redirectTo: '/'
@@ -21,4 +22,21 @@ var playerApp = angular.module('player', ['ngRoute'])
 
    $locationProvider.html5Mode('true');
 
-}); // end config
+}) // end config
+
+
+.directive('progressbar', ['$timeout', function($timeout){
+  return {
+    restrict: 'E',
+    scope: {
+      progress: '=',
+      delay: '='
+    },
+    template: '<div class="progress-bar"><div class="progress" style="width:{{progress}}%"></div></div>',
+    link: function(scope, element, attrs) {
+      console.dir(element);
+
+      element.css('width', scope.progress);
+    }
+  };
+}]);

@@ -1,6 +1,19 @@
 
-<section class="settings"> 
+<section class="settings col-50" > 
   <h1>Settings</h1>
   <a href="#/player" class="close">&times;</a>
 
 </section>
+
+<section class="stats col-50" > 
+  <h1>Stats</h1>
+
+  <h2>Disk Usage</h2>
+  <p>{{diskusage() | size}} of 5MB</p>
+  <div class="disk-space"><div class="progress"></div></div>
+
+  <progressbar class="progress-bar" progress="diskusage() / (1024*1024*5) * 100" delay="0" ></progressbar>
+
+</section>
+
+ 

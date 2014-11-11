@@ -166,3 +166,17 @@ header.top {
   right: 5px;
   top: -6px;
 }
+
+
+/*
+ * Stats
+ */
+.progress-bar{
+	background-color: #999999;
+	height: 1em;
+	width: 100%;
+}
+.progress-bar .progress{	
+	background-color: #22AA24;
+	height: 100%;
+}
