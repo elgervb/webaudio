@@ -23,3 +23,10 @@ playerApp.filter('duration', function() {
     return (h?h+":":"")+(m<10&&h>0?"0"+m:m)+ ":" + (s<10?"0"+s:s) || 0;
   };
 });
+
+playerApp.filter('size', function() {
+  return function(size) {
+    var i = Math.floor( Math.log(size) / Math.log(1024) );
+    return ( size / Math.pow(1024, i) ).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
+  };
+});
