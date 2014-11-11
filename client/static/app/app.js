@@ -4,7 +4,7 @@ var playerApp = angular.module('player', ['ngRoute'])
   //$templateCache.put('templateId.html', 'This is the content of the template');
 
   // TODO implement template caching http://stackoverflow.com/questions/24658966/using-templatecache-in-ui-routers-template
-});
+})
 
 .config(function($routeProvider, $locationProvider) {
  
