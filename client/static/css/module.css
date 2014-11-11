@@ -1,3 +1,6 @@
+a:hover{
+	text-decoration: none;
+}
 #play{
 	background-position: center center;
 	background-repeat: no-repeat;
@@ -39,6 +42,22 @@
 }
 .now-playing{
 	padding-bottom: 0;
+}
+.settings-btn{
+	background: transparent url(img/settings.png) no-repeat center center;
+	height: 32px;
+	opacity: .3;
+	position: absolute;
+	right: 5px;
+	top: 5px;
+	transition: opacity .3s ease-in 0s;
+	width: 32px;
+}
+.top:hover .settings-btn{
+	opacity: .7;
+}
+.settings-btn:hover{
+	opacity: 1;
 }
 
 input[type='range'], input[type='range']::-moz-range-track{
@@ -86,14 +105,14 @@ header.top {
   right: 0;
 }
 
-.settings{
+.settings-bar{
 	background: rgba(255, 255, 255, 0.75);
 	bottom: 0;
 	padding: 3px 10px;
 	position: fixed;
 	width: 100%;
 }
-.settings .action{
+.settings-bar .action{
 	background-size: 16px;
 	display: inline-block;
 	opacity: .1;
@@ -105,7 +124,7 @@ header.top {
 .leftpanel:hover .action, .rightpanel:hover .action{
 	opacity: .5;
 }
-.settings .action:hover{
+.settings-bar .action:hover{
 	opacity: 1;
 }
 #playlist, #library{
@@ -139,4 +158,11 @@ header.top {
 }
 .hide{
 	display: none;
+}
+
+.settings .close{
+	font-size: 3em;
+  position: absolute;
+  right: 5px;
+  top: -6px;
 }

@@ -21,6 +21,8 @@
         <p class="now-playing">{{nowplaying | track}} {{progress.max | duration}} </p>
         <input type=range id="progress" min='0.0' ng-model='progress.value' max='{{progress.max}}' step='0.1' disabled="">
       </div>
+
+      <a href="#settings" class="settings-btn"></a>
     </header>
 
     <section class="main">
@@ -33,7 +35,7 @@
           {{track | track}}
           </li>
         </ul>
-        <div class="settings">
+        <div class="settings-bar">
           <a href="#" class="action clear-playlist" title="Clear playlist" ng-click="clear()">Clear playlist</a>
           <a href="#" class="action save-playlist" title="Save playlist" ng-click="save()">Save playlist</a>
           <a href="#" class="action shuffle-playlist" title="Shuffle playlist" ng-click="shuffle()">Shuffle playlist</a>
@@ -48,7 +50,7 @@
           {{track | track}}
           </li>
         </ul>
-        <div class="settings">
+        <div class="settings-bar">
           <input type="text" id="filter" ng-model="filter" ng-model-options="{ debounce: 300 }" placeholder="filter" />
           <a href="#" class="action reload-library" title="Reload library" ng-click="reload()">Reload library</a>
         </div>
