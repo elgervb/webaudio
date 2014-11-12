@@ -6,11 +6,9 @@ use core\IBootstrap;
 use core\logging\Logger;
 use core\logging\decorator\impl\LogDecorator;
 use core\logging\recorder\impl\BufferedFileRecorder;
-use core\mvc\impl\view\Layout;
 use core\routing\impl\Router;
 use core\routing\impl\Route;
 use core\translations\Translator;
-use core\url\UrlUtils;
 
 include_once 'AppContext.php';
 
