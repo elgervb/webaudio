@@ -14,7 +14,7 @@ class DirScanner{
 		$dirIterator->setInfoClass('audio\scanner\SecureFileInfo');
 		
 		return new \CallbackFilterIterator(
-			new \RecursiveIteratorIterator(s
+			new \RecursiveIteratorIterator(
 				$dirIterator,\RecursiveIteratorIterator::CHILD_FIRST
 			),
 			function($current, $key, $iterator) use ($aDir, $aExtensions){
