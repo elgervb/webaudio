@@ -32,6 +32,10 @@ playerApp.factory('player',
      */
     player.addEventListener('play', function(e){
       var msg = "Now playing " + $filter('track')(e.detail.track) + "(" + $filter('duration')(e.detail.elapsed||0) + " of " + $filter('duration')(e.detail.duration) + ")";
+
+      if ("Notification" in window && Notification.permission !== "granted" && usersettings.notifications) { 
+        Notification.requestPermission(function(){});
+      }
       plugins.notifications(msg, usersettings);
     }, false);
 
