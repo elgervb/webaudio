@@ -53,7 +53,8 @@ class IndexController implements IController
 		$settings = \AppContext::get()->getSettings();
 		
 		// do the scan
-		$files = DirScanner::scan($settings->offsetGet('scanfolder'), $settings->offsetGet('scanExtensions'));
+		$scanner = new DirScanner();
+		$files = $scanner->scan($settings->offsetGet('scanfolder'), $settings->offsetGet('scanExtensions'));
 
 		// remove the database
 		$db = Context::get()->getBasePath('app/'.\AppContext::FILES_DB);

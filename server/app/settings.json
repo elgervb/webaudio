@@ -1,4 +1,4 @@
 {
-	"scanfolder" : "\\\\NETWORKSPACE2\\OpenShare\\Music",
+	"scanfolder"     : "\\\\NETWORKSPACE2\\OpenShare\\Music",
 	"scanExtensions" : ["mp3"]
 }
