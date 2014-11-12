@@ -1,8 +1,6 @@
 <?php
 namespace app\i18n;
 
-use app\Bootstrap;
-
 use core\translations\bundle\ITranslationBundle;
 
 class TranslationBundle implements ITranslationBundle

@@ -8,7 +8,6 @@ use core\mvc\IController;
 use core\mvc\impl\json\Json;
 
 use audio\scanner\DirScanner;
-use core\utils\JsonUtils;
 use core\utils\ModelUtils;
 use core\Context;
 use core\mvc\impl\redirect\Redirect;
