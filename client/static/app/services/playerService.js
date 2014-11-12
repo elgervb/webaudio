@@ -2,7 +2,7 @@
  * Values & factories
  */
 playerApp.factory('player', 
-  function($rootScope, $filter){
+  function($rootScope, $filter, usersettings){
     var player =  new Player({debug: true});
 
     player.addEventListener('loading', function(e){
@@ -32,7 +32,7 @@ playerApp.factory('player',
      */
     player.addEventListener('play', function(e){
       var msg = "Now playing " + $filter('track')(e.detail.track) + "(" + $filter('duration')(e.detail.elapsed||0) + " of " + $filter('duration')(e.detail.duration) + ")";
-      plugins.notifications(msg);
+      plugins.notifications(msg, usersettings);
     }, false);
 
     return player;
@@ -43,9 +43,12 @@ var plugins = {
     /**
      * Show a notification when the next song is played when the player is not visible
      */
-    notifications: function(message){
+    notifications: function(message, usersettings){
       var notification, hidden, visible, visibilityChange;
 
+      if (!usersettings.notifications){
+        return;
+      }
       // first, do some prefix checking
       if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support 
         hidden = "hidden";

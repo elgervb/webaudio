@@ -3,6 +3,23 @@
   <h1>Settings</h1>
   <a href="#/player" class="close">&times;</a>
 
+  <form class="form horizontal">
+  	
+  	<div class="group">
+	  	<label for="notifications">Notifications</label>
+	  	<div class="control">
+		  	<div class="switch">
+		      <input type="radio" class="switch-input" ng-value="true" name="notification-group" id="notification-yes" ng-model="usersettings.notifications" checked>
+		      <label for="notification-yes" class="switch-label switch-label-off" >YES</label>
+		      <input type="radio" class="switch-input" ng-value="false" name="notification-group" id="notification-no" ng-model="usersettings.notifications">
+		      <label for="notification-no" class="switch-label switch-label-on">NO</label>
+		      <span class="switch-selection"></span>
+		    </div>
+		</div>
+	</div>
+
+  </form>
+
 </section>
 
 <section class="stats col-50" > 
