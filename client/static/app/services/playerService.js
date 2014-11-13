@@ -31,12 +31,13 @@ playerApp.factory('player',
      * Extensions
      */
     player.addEventListener('play', function(e){
-      var msg = "Now playing " + $filter('track')(e.detail.track) + "(" + $filter('duration')(e.detail.elapsed||0) + " of " + $filter('duration')(e.detail.duration) + ")";
+      var msg = "Now playing";
+      var body = $filter('track')(e.detail.track) + "(" + $filter('duration')(e.detail.elapsed||0) + " of " + $filter('duration')(e.detail.duration) + ")";
 
       if ("Notification" in window && Notification.permission !== "granted" && usersettings.notifications) { 
         Notification.requestPermission(function(){});
       }
-      plugins.notifications(msg, usersettings);
+      plugins.notifications(msg, body, usersettings);
     }, false);
 
     return player;
@@ -47,7 +48,7 @@ var plugins = {
     /**
      * Show a notification when the next song is played when the player is not visible
      */
-    notifications: function(message, usersettings){
+    notifications: function(message, body, usersettings){
       var notification, hidden, visible, visibilityChange;
 
       if (!usersettings.notifications){
@@ -77,13 +78,13 @@ var plugins = {
         if ("Notification" in window) { // check for support
           if (Notification.permission === "granted") {
             // If it's okay let's create a notification
-            notification = new Notification(message);
+            notification = new Notification(message, {body: body, icon: 'static/css/img/audio.png'});
           }
           else if (Notification.permission !== 'denied') {
             Notification.requestPermission(function (permission) {
               // If the user is okay, let's create a notification
               if (permission === "granted") {
-                notification = new Notification(message);
+                notification = new Notification(message, {body: body, icon: 'static/css/img/audio.png'});
               }
             });
           }
