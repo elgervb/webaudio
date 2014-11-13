@@ -18,4 +18,5 @@ Server:
 
 HTML5 API's
 ===========
-Notifications: http://www.w3.org/TR/notifications
+Notifications: Desktop notifications outside the browser scope
+  http://www.w3.org/TR/notifications
