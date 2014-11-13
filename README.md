@@ -1,7 +1,7 @@
 webaudio
 ========
 
-Play music online
+Play music from the browser: anywhere!
 
 
 
