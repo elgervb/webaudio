@@ -14,3 +14,8 @@ Client:
 Server:
 * Any webserver that can run PHP
 * PHP 5.4
+
+
+HTML5 API's
+===========
+Notifications: http://www.w3.org/TR/notifications
