@@ -16,7 +16,7 @@ playerApp.controller('PlaylistController', ['$scope', '$rootScope', 'player',
     };
     $scope.clear = function(){
       player.playlist().clear();
-      $scope.tracks = [];
+      $scope.tracks = player.playlist().items();
       // clear cache
       localStorage.setItem('local.playlist', JSON.stringify( $scope.tracks ) );
     }
@@ -30,19 +30,44 @@ playerApp.controller('PlaylistController', ['$scope', '$rootScope', 'player',
       localStorage.setItem('local.playlist', JSON.stringify( $scope.tracks ) ); 
     };
     $scope.shuffle = function(){
-      $scope.tracks =  player.playlist().shuffle();
+      $scope.tracks = player.playlist().shuffle();
+    };
+    $scope.moveUp = function(track, $event){
+      $event.preventDefault();
+      var playlist = player.playlist();
+      var index = playlist.indexOf(track.guid);
+      playlist.moveItem(index, index-1);
+      $scope.tracks = playlist.items();
+      $event.stopPropagation();
+    };
+    $scope.moveDown = function(track, $event){
+      $event.preventDefault();
+      var playlist = player.playlist();
+      var index = playlist.indexOf(track.guid);
+      playlist.moveItem(index, index+1);
+      $scope.tracks = playlist.items();
+      $event.stopPropagation();
+    };
+    $scope.remove = function(track, $event){
+      $event.preventDefault();
+      var playlist = player.playlist();
+      var index = playlist.indexOf(track.guid);
+      playlist.remove( index );
+    
+      $scope.tracks = playlist.items();
+
+      $event.stopPropagation();
     };
 
     $scope.$on('addToPlayList', function(event, track){
       player.playlist().add(track);
-      $scope.tracks.push(track);
+       $scope.tracks = player.playlist().items();
     });
 
     if (localStorage.length && localStorage.getItem('local.playlist')){
-      $scope.tracks = JSON.parse( localStorage.getItem('local.playlist') );
-
-      $scope.tracks.forEach(function(track){
+      JSON.parse( localStorage.getItem('local.playlist') ).forEach(function(track){
         player.playlist().add(track);
       });
+      $scope.tracks = player.playlist().items();
     }
   }]);

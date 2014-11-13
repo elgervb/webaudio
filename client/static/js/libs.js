@@ -306,6 +306,21 @@ var Playlist = function(items){
       }
     }
   },
+  indexOf = function(guid){
+    for ( var i in songs) {
+      if (songs[i].guid === guid){
+        index = parseInt(i);
+        return index;
+      }
+    }
+    return -1; // not found
+  },
+  items = function(){
+    return songs;
+  },
+  moveItem = function(from, to){
+   songs.splice(to, 0, songs.splice(from, 1)[0]);
+  },
   next = function(){
     var item = getNext();
     if (item){
@@ -322,7 +337,7 @@ var Playlist = function(items){
       }
     }
     return false;
-  }
+  },
   previous = function(){
     if (index > 0 ){
       return songs[--index]
@@ -364,6 +379,9 @@ var Playlist = function(items){
     current : current,
     getNext : getNext,
     goto : goto,
+    indexOf : indexOf,
+    items : items,
+    moveItem : moveItem,
     next  : next,
     peek  : peek,
     previous : previous,

@@ -31,8 +31,13 @@
       <div class="leftpanel col-50" ng-controller="PlaylistController">
 
         <ul id="playlist">
-          <li ng-repeat="track in tracks track by $index" ng-click="play(track)" ng-class="{current: nowplaying(track)}">
-          {{track | track}}
+          <li class="item" ng-repeat="track in tracks track by $index" ng-click="play(track)" ng-class="{current: nowplaying(track)}">
+            {{track | track}}
+            <div class="actions">
+              <a href ng-click="moveDown(track, $event)" class="moveDown"></a>
+              <a href ng-click="moveUp(track, $event)" class="moveUp"></a>
+              <a href ng-click="remove(track, $event)" class="remove"></a>
+            </div>
           </li>
         </ul>
         <div class="settings-bar">

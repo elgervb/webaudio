@@ -130,6 +130,9 @@ header.top {
 #playlist, #library{
 	padding-bottom: 50px;
 }
+#playlist .item{
+  position: relative;
+}
 #playlist .current{
 	background-color: #E4E4E4;
 }
@@ -144,6 +147,37 @@ header.top {
 }
 .shuffle-playlist{
 	background: transparent url(img/shuffle.png) no-repeat center center;
+}
+#playlist .actions{
+  position: absolute;
+  opacity: 0;
+  right: 0;
+  top: 4px;
+  transition: opacity .0s ease-in 0s;
+  z-index: 200;
+}
+#playlist .item:hover .actions{
+  opacity: 1;
+}
+#playlist .actions a{
+  display: block;
+  float: left;
+  height: 16px;
+  margin-left: 2px;
+  opacity: .4;
+  width: 16px;
+}
+#playlist .actions a:hover{
+  opacity: 1;
+}
+#playlist .actions a.moveDown{
+  background: transparent url(img/down.png) no-repeat center center;
+}
+#playlist .actions a.moveUp{
+  background: transparent url(img/up.png) no-repeat center center;
+}
+#playlist .actions a.remove{
+  background: transparent url(img/clear.png) no-repeat center center / 16px 16px;
 }
 #filter{
 	background: rgba(255, 255, 255, 0.8);
