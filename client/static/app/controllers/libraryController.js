@@ -4,6 +4,9 @@ playerApp.controller('LibraryController', ['$scope', '$rootScope', 'player',
     $scope.addToPlaylist = function(track){
       $rootScope.$broadcast('addToPlayList', track);
     }
+    $scope.addAllToPlaylist = function(){
+      $rootScope.$broadcast('addAllToPlayList', $scope.tracks);
+    }
 
     $scope.load = function(){
       $scope.loading = true;

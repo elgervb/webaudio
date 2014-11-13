@@ -3,8 +3,8 @@
    *
    * TODO find a way to use the playlist object of player to map the tracks to. Now we use $scope.tracks, that means we have a double administration
    */
-playerApp.controller('PlaylistController', ['$scope', '$rootScope', 'player', 
-  function($scope, $rootScope, player){
+playerApp.controller('PlaylistController', ['$scope', '$rootScope', '$timeout', 'player', 
+  function($scope, $rootScope, $timeout, player){
 
     $scope.tracks = [];
 
@@ -61,7 +61,18 @@ playerApp.controller('PlaylistController', ['$scope', '$rootScope', 'player',
 
     $scope.$on('addToPlayList', function(event, track){
       player.playlist().add(track);
-       $scope.tracks = player.playlist().items();
+      $scope.tracks = player.playlist().items();
+    });
+    $scope.$on('addAllToPlayList', function(event, tracks){
+      var playlist = player.playlist();
+      playlist.clear();
+      tracks.forEach(function(t){
+        playlist.add(t);
+      });
+      $timeout(function(){
+        $scope.tracks = playlist.items();
+      });
+      
     });
 
     if (localStorage.length && localStorage.getItem('local.playlist')){

@@ -148,6 +148,9 @@ header.top {
 .shuffle-playlist{
 	background: transparent url(img/shuffle.png) no-repeat center center;
 }
+.add-all{
+  background: transparent url(img/multi-add.png) no-repeat center center;
+}
 #playlist .actions{
   position: absolute;
   opacity: 0;
