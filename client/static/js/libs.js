@@ -113,7 +113,7 @@ var Player = function(options){
       
       target.dispatchEvent(createEvent('loading', {track: track } ));
       log('start loading...', track.path);
-      new Loader( encodeURIComponents( '../server/stream/'+ track.path ) )
+      new Loader( encodeURIComponents( '../server/stream/'+ track.guid ) )
       .then(function(buffer, url){
         state = 'loading';
         log(state+' '+playlist.current().path);

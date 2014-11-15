@@ -1,6 +1,10 @@
 <?php
 namespace app\page;
 
+use core\mvc\impl\http\HttpStatus;
+
+use core\utils\JsonUtils;
+
 use id3\Id3v2;
 use id3\Id3Exception;
 
@@ -90,10 +94,26 @@ class IndexController implements IController
 		return new Redirect(UrlUtils::siteUrl());
 	}
 	
-	public function streamAction($aFile){
+	/**
+	 * Stream a audio track back to the client
+	 * 
+	 * @param string $aGuid the GUID identifier of the audio track
+	 * 
+	 * @return 
+	 */
+	public function streamAction($aGuid){
 		$settings = \AppContext::get()->getSettings();
-		$file = $settings->offsetGet('scanfolder') . DIRECTORY_SEPARATOR . $aFile;
-	
-		return new DownloadAction(new \SplFileInfo($file));
+		$repository = \AppContext::get()->getRepository();
+		$sc = $repository->createSearchCriteria()->where("guid", $aGuid);
+		$result = $repository->search($sc);
+		
+		if ($result->count() > 0){
+			$model = $result->offsetGet(0);
+			$file = $settings->offsetGet('scanfolder') . DIRECTORY_SEPARATOR . $model->{"path"};
+			
+			return new DownloadAction(new \SplFileInfo($file));
+		}
+		
+		return HttpStatus(404);
 	}
 }
