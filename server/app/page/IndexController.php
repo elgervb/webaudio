@@ -35,7 +35,7 @@ class IndexController implements IController
 		set_time_limit(60);
 		$repository = \AppContext::get()->getRepository();
 		$sc = $repository->createSearchCriteria();
-		$sc->orderBy("artist, album, title, track, path");
+		$sc->orderBy("artist, album, track, title, path");
 		return new Json($repository->search($sc));
 	}
 	
