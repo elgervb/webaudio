@@ -3,6 +3,7 @@ namespace audio\scanner;
 
 use utils\CallbackFilterIterator;
 use core\filesystem\Filesystem;
+use core\logging\Logger;
 
 class DirScanner{
 	
@@ -19,6 +20,7 @@ class DirScanner{
 	 */
 	public function scan($aDir, array $aExtensions){
 		$dirIterator = new \RecursiveDirectoryIterator( $aDir );
+		Logger::get()->logFine("Scan folder " . $aDir);
 		if (!$this->preservePath){
 			$dirIterator->setInfoClass('audio\scanner\SecureFileInfo');
 		}
