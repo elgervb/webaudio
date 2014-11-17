@@ -13,7 +13,7 @@ Client:
 
 Server:
 * Any webserver that can run PHP
-* PHP 5.4
+* PHP 5.3 (or greater)
 
 HTML5 API's 
 ===========
