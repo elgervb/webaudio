@@ -18,6 +18,7 @@ use core\mvc\impl\redirect\Redirect;
 use core\url\UrlUtils;
 use core\download\DownloadAction;
 use core\filesystem\Filesystem;
+use core\logging\Logger;
 
 /**
  * Index page
@@ -114,6 +115,7 @@ class IndexController implements IController
 			return new DownloadAction(new \SplFileInfo($file));
 		}
 		
-		return HttpStatus(404);
+		Logger::get()->logWarning("Could not find audio track with GUID " . $aGuid);
+		return new HttpStatus(404);
 	}
 }
