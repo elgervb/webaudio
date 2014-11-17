@@ -16,7 +16,14 @@ playerApp.controller('settingsController', ['$scope', '$timeout', '$interval', '
   	);
 
   	$scope.diskusage = function(){
-  		return localStorage.getItem('local.library').length + localStorage.getItem('local.playlist').length;
+      var size = 0;
+      if (localStorage.getItem('local.library')){
+        size += localStorage.getItem('local.library').length;
+      }
+      if (localStorage.getItem('local.playlist')){
+        size += localStorage.getItem('local.playlist').length;
+      }
+  		return size;
   	}
   }
 ]);
