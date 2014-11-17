@@ -44,3 +44,4 @@ Temporary Items
 
 *.mp3
 *.log
+server/app/cache/audioserver.sqlite
